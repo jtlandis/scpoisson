@@ -30,13 +30,12 @@
 #'     \item Stuart, T. et al. Comprehensive integration of single-cell data. Cell 177, 1888 (2019)
 #' }
 #'
-#' @import Seurat
 #'
 #' @export
 logit_Seurat_clustering <- function(test_set, pdat = NULL, PCA = T, N = 15, pres = 0.8){
 
   sdata <- as(as.matrix(t(test_set)), "dgCMatrix")
-  sdata <- CreateSeuratObject(counts = sdata)
+  sdata <- Seurat::CreateSeuratObject(counts = sdata)
   if(is.null(pdat)){
     pdat <- adj_CDF_logit(test_set)
   }
@@ -45,22 +44,22 @@ logit_Seurat_clustering <- function(test_set, pdat = NULL, PCA = T, N = 15, pres
   sdata[["RNA"]]@scale.data = t(pdat)
 
   if(PCA){
-    sdata <- RunPCA(object = sdata,  features = rownames(sdata))
-    sdata <- FindNeighbors(sdata, reduction = "pca", dims = 1:N)
+    sdata <- Seurat::RunPCA(object = sdata,  features = rownames(sdata))
+    sdata <- Seurat::FindNeighbors(sdata, reduction = "pca", dims = 1:N)
   }
 
   if(!PCA){
-    sdata <- RunPCA(object = sdata,  features = rownames(sdata))
+    sdata <- Seurat::RunPCA(object = sdata,  features = rownames(sdata))
     sdata@reductions$pca@cell.embeddings <- pdat
-    sdata <- FindNeighbors(sdata, reduction = "pca", dims = 1:ncol(pdat))
+    sdata <- Seurat::FindNeighbors(sdata, reduction = "pca", dims = 1:ncol(pdat))
   }
 
-  sdata <- FindClusters(sdata, resolution = pres)
-  sdata <- RunUMAP(sdata, dims = 1:N)
-  sdata <- RunTSNE(object = sdata, dims.use = 1:N, do.fast = TRUE, check_duplicates = FALSE)
+  sdata <- Seurat::FindClusters(sdata, resolution = pres)
+  sdata <- Seurat::RunUMAP(sdata, dims = 1:N)
+  sdata <- Seurat::RunTSNE(object = sdata, dims.use = 1:N, do.fast = TRUE, check_duplicates = FALSE)
 
-  tsne_data <- Embeddings(object = sdata[["tsne"]])
-  umap_data <- Embeddings(object = sdata[["umap"]])
+  tsne_data <- Seurat::Embeddings(object = sdata[["tsne"]])
+  umap_data <- Seurat::Embeddings(object = sdata[["umap"]])
 
   return(list(sdata,
               tsne_data, umap_data,
