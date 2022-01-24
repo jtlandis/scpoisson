@@ -1,93 +1,68 @@
+#' Louvain clustering using departure as data representation
+#'
+#' logit_Seurat_clustering returns a list with elements useful to check and compare cell clustering
+#'
+#' This is a function used to get cell clustering using Louvain clustering implemented in Seurat package
+#'
+#' @param test_set a UMI count data frame or matirx with cells as rows and genes as columns
+#' @param pdat a matrix representated by model departure for each entry
+#' @param PCA whether apply PCA before Louvain clustering, default is \code{TRUE}
+#' @param N the number of pricipal components included for further clustering, default = 15
+#' @param pres the resolution parameter in Louvain clustering, default = 0.8
+#'
+#' @return a list with the following elements:
+#' \itemize{
+#' \item{\code{sdata}}: {a Seurat object}
+#' \item{\code{tsne_data}}: {a matrix containing t-SNE dimensionality reduction results,
+#' with cells as rows, and first two t-SNE dimension as columns}
+#' \item{\code{umap_data}}: {a matrix containing UMAP dimensionality reduction results,
+#' with cells as rows, and first two UMAP dimension as columns}
+#' \item{\code{sdata$seurat_clusters}}: {a vector with clustering index for each cell}
+#' }
+#'
+#' @examples
+#'
+#' test_set <- matrix(rpois(500, 0.5), nrow = 10)
+#' logit_Seurat_clustering(test_set)
+#'
+#' @references
+#' \itemize{
+#'     \item Stuart, T. et al. Comprehensive integration of single-cell data. Cell 177, 1888 (2019)
+#' }
+#'
+#' @import Seurat
+#'
+#' @export
+logit_Seurat_clustering <- function(test_set, pdat = NULL, PCA = T, N = 15, pres = 0.8){
 
-
-normalize_seurat <- function(dat, all = T, PCA = F){
-  
-  test_set <- dat
-  n <- nrow(test_set)
-  d <- ncol(test_set)
-  
-  # data to sparse matrix
   sdata <- as(as.matrix(t(test_set)), "dgCMatrix")
-  
-  # Initialize the Seurat object with the raw (non-normalized data).
-  sdata <- Seurat::CreateSeuratObject(counts = sdata)
-  sdata[["percent.mt"]] <- Seurat::PercentageFeatureSet(sdata, pattern = "^MT-")
-  sdata <- Seurat::NormalizeData(object = sdata, normalization.method = "LogNormalize", scale.factor = 10000)
-  
-  # 2000 variable genes were determined using the Seurat FindVariableFeatures function
-  sdata <- Seurat::FindVariableFeatures(sdata, selection.method = "vst", nfeatures = 2000)
-  all.genes <- rownames(sdata)
-  
-  # Seurat ScaleData function was used to scale the data
-  if(all){
-    sdata <- Seurat::ScaleData(sdata, features = all.genes)
+  sdata <- CreateSeuratObject(counts = sdata)
+  if(is.null(pdat)){
+    pdat <- adj_CDF_logit(test_set)
   }
-  if(!all){
-    sdata <- Seurat::ScaleData(sdata)
-  }
-  
-  if (!PCA){
-    return(t(sdata[["RNA"]]@scale.data))}
-  
+
+  sdata@assays$RNA@scale.data=t(pdat)
+  sdata[["RNA"]]@scale.data = t(pdat)
+
   if(PCA){
-    sdata <- Seurat::RunPCA(object = sdata,  features = VariableFeatures(object = sdata))
-    sdata <- Seurat::FindNeighbors(sdata, reduction = "pca", dims = 1:15)
-    sdata <- Seurat::FindClusters(sdata, resolution = 0.8)
-    sdata <- Seurat::RunUMAP(sdata, dims = 1:15)
-    sdata <- Seurat::RunTSNE(object = sdata, dims.use = 1:15, do.fast = TRUE)
-    
-    tsne_data <- Seurat::Embeddings(object = sdata[["tsne"]])
-    umap_data <- Seurat::Embeddings(object = sdata[["umap"]])
-    
-    return(list(t(sdata[["RNA"]]@scale.data), tsne_data, umap_data, Seurat::Embeddings(sdata, reduction = "pca")[,1:15]))
+    sdata <- RunPCA(object = sdata,  features = rownames(sdata))
+    sdata <- FindNeighbors(sdata, reduction = "pca", dims = 1:N)
   }
-}
 
-para_est_new <- function(test_set){
-  
-  test_set <- test_set[, which(colSums(test_set) > 0)]
-  n <- nrow(test_set)
-  d <- ncol(test_set)
-  N <- n+d+1
-  
-  mu <- log(sum(test_set) / (n*d))
-  w <- log(rowMeans(test_set)) -mu
-  r <- log(colMeans(test_set)) - mu
-  
-  para <- c(mu, w, r)
-  
-  return(para)
-}
-
-
-adj_CDF_logit <- function(dat, change = 1e-10){
-  test_set <- dat
-  test_set <- test_set[, which(colSums(test_set) > 0)]
-  n <- nrow(test_set)
-  d <- ncol(test_set)
-  para <- para_est_new(test_set)
-  mu <- para[1]
-  w <- para[2:(n+1)]
-  r <- para[(n+2):(n+d+1)]
-  log_Pe = mu + w %*% matrix(rep(1, len = d), nrow = 1) + matrix(rep(1, len = n), ncol = 1) %*% r
-  Pe <- exp(log_Pe)
-  rownames(Pe) <- rownames(test_set)
-  colnames(Pe) <- colnames(test_set)
-  
-  # adjust CDF
-  F_adj <- function(a, b){
-    Fadj <- (ppois(a,b) + ppois(a-1,b)) / 2 
-    return(Fadj)
+  if(!PCA){
+    sdata <- RunPCA(object = sdata,  features = rownames(sdata))
+    sdata@reductions$pca@cell.embeddings <- pdat
+    sdata <- FindNeighbors(sdata, reduction = "pca", dims = 1:ncol(pdat))
   }
-  
-  #compare with adjusted CDF
-  l_adj_test <- list(a = as.list(as.vector(as.matrix(test_set))), b = as.list(Pe))
-  cdf_adj_test <- purrr::pmap(l_adj_test, function(a,b) F_adj(a,b)) %>% 
-    matrix(ncol = ncol(test_set))
-  mcdf_adj_test <- unlist(cdf_adj_test) %>% matrix(ncol = ncol(test_set))
-  rownames(mcdf_adj_test) <- rownames(test_set)
-  colnames(mcdf_adj_test) <- colnames(test_set)
-  mcdf_adj_test[mcdf_adj_test < change] <- change
-  mcdf_adj_test[mcdf_adj_test > (1 - change)] <- 1 - change
-  return(logit(mcdf_adj_test))
+
+  sdata <- FindClusters(sdata, resolution = pres)
+  sdata <- RunUMAP(sdata, dims = 1:N)
+  sdata <- RunTSNE(object = sdata, dims.use = 1:N, do.fast = TRUE, check_duplicates = FALSE)
+
+  tsne_data <- Embeddings(object = sdata[["tsne"]])
+  umap_data <- Embeddings(object = sdata[["umap"]])
+
+  return(list(sdata,
+              tsne_data, umap_data,
+              sdata$seurat_clusters))
 }
