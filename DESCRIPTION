@@ -1,5 +1,5 @@
 Package: scpoissonmodel
-Title: What the Package Does (One Line, Title Case)
+Title: Single Cell Poisson Probability Paradigm
 Version: 0.0.0.9000
 Authors@R: c(
     person("Yue", "Pan", email = "yue221@live.unc.edu", role = c("aut", "cre")),
