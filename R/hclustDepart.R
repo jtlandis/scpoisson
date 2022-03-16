@@ -30,14 +30,13 @@
 #'
 #' @import stats
 #'
-#' @export
 sigp <- function(test_dat, minSize = 10, sim = 100){
 
-  if(is.null(dim(test_dat))) {
+  stopifnot('Require a matrix or data frame as input' = is.matrix(test_dat))
+  if(nrow(test_dat) <= minSize) {
     return(list(NA,NA, NA, NA))
-  } else if(nrow(test_dat) <= minSize) {
-    return(list(NA,NA, NA, NA))
-  } else{
+  }
+  else {
     test_dat <- test_dat[, which(colSums(test_dat) > 0)]
   }
   clust_dat <- adj_CDF_logit(test_dat)
@@ -95,30 +94,32 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' split_output_withsig(test_set)
 #'
 #' @export
-split_output_withsig <- function(test_dat, maxSplit = 10, minSize = 10){
+HclustDepart <- function(scppp_obj, maxSplit = 10, minSize = 10, sim = 100){
 
+  test_dat <- scppp_obj[["data"]]
   S <- minSize
   J <- maxSplit
+  Env <- new.env()
 
   clustonly <- function(test_dat, j = j){
-    sigclust_obj <- sigp(test_dat, minSize = S)
+    sigclust_obj <- sigp(test_dat, S, sim)
     if(j > J |
        cluster_size(test_dat) <= S |
        sigclust_obj[[1]] > 0.05) {
       warning("finish required split or cluster homogeneous enough")
 
-      if(is.null(.GlobalEnv$clust1all[[j]]) & is.null(.GlobalEnv$clust2all[[j]])){
-        .GlobalEnv$sigclust_p[, j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[, j] <- sigclust_obj[[2]]
+      if(is.null(Env$clust1all[[j]]) & is.null(Env$clust2all[[j]])){
+        Env$sigclust_p[, j] <- sigclust_obj[[1]]
+        Env$sigclust_z[, j] <- sigclust_obj[[2]]
       }
-      if(!is.null(.GlobalEnv$clust1all[[j]]) & all(rownames(test_dat) %in% .GlobalEnv$clust1all[[j]])){
-        .GlobalEnv$sigclust_p[which(rownames(.GlobalEnv$res_split) %in% .GlobalEnv$clust1all[[j]]), j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[which(rownames(.GlobalEnv$res_split) %in% .GlobalEnv$clust1all[[j]]), j] <- sigclust_obj[[2]]
+      if(!is.null(Env$clust1all[[j]]) & all(rownames(test_dat) %in% Env$clust1all[[j]])){
+        Env$sigclust_p[which(rownames(Env$res_split) %in% Env$clust1all[[j]]), j] <- sigclust_obj[[1]]
+        Env$sigclust_z[which(rownames(Env$res_split) %in% Env$clust1all[[j]]), j] <- sigclust_obj[[2]]
       }
 
-      if(!is.null(.GlobalEnv$clust2all[[j]]) & all(rownames(test_dat) %in% .GlobalEnv$clust2all[[j]])){
-        .GlobalEnv$sigclust_p[which(rownames(.GlobalEnv$res_split) %in% .GlobalEnv$clust2all[[j]]), j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[which(rownames(.GlobalEnv$res_split) %in% .GlobalEnv$clust2all[[j]]), j] <- sigclust_obj[[2]]
+      if(!is.null(Env$clust2all[[j]]) & all(rownames(test_dat) %in% Env$clust2all[[j]])){
+        Env$sigclust_p[which(rownames(Env$res_split) %in% Env$clust2all[[j]]), j] <- sigclust_obj[[1]]
+        Env$sigclust_z[which(rownames(Env$res_split) %in% Env$clust2all[[j]]), j] <- sigclust_obj[[2]]
       }
 
       if(is.null(dim(test_dat))) {
@@ -127,28 +128,28 @@ split_output_withsig <- function(test_dat, maxSplit = 10, minSize = 10){
         test_dat <- matrix(test_dat, nrow = 1)
       }
       test_dat <- test_dat[, which(colSums(test_dat) > 0)]
-      #.GlobalEnv$res[[i]] <- test_dat
-      .GlobalEnv$i <- .GlobalEnv$i + 1
+      #Env$res[[i]] <- test_dat
+      Env$i <- Env$i + 1
     }
     else if (is.null(dim(test_dat))){
-      .GlobalEnv$sigclust_p[, j] <- sigclust_obj[[1]]
-      .GlobalEnv$sigclust_z[, j] <- sigclust_obj[[2]]
+      Env$sigclust_p[, j] <- sigclust_obj[[1]]
+      Env$sigclust_z[, j] <- sigclust_obj[[2]]
       test_dat <- matrix(test_dat, nrow = 1)
       test_dat <- test_dat[, which(colSums(test_dat) > 0)]
       test_dat <- matrix(test_dat, nrow = 1)
-      #.GlobalEnv$res[[i]] <- test_dat
-      .GlobalEnv$i <- .GlobalEnv$i + 1
+      #Env$res[[i]] <- test_dat
+      Env$i <- Env$i + 1
     }
     else if (nrow(test_dat) <= 2) {warning("less than two cells are not allowed for further split")
       if(is.null(dim(test_dat))) {
-        .GlobalEnv$sigclust_p[, j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[, j] <- sigclust_obj[[2]]
+        Env$sigclust_p[, j] <- sigclust_obj[[1]]
+        Env$sigclust_z[, j] <- sigclust_obj[[2]]
         test_dat <- matrix(test_dat, nrow = 1)
         test_dat <- test_dat[, which(colSums(test_dat) > 0)]
         test_dat <- matrix(test_dat, nrow = 1)
       }
       test_dat <- test_dat[, which(colSums(test_dat) > 0)]
-      .GlobalEnv$i <- .GlobalEnv$i + 1
+      Env$i <- Env$i + 1
     }
 
     else {
@@ -161,25 +162,25 @@ split_output_withsig <- function(test_dat, maxSplit = 10, minSize = 10){
       dat1 <- test_dat[which(rownames(dat) %in% clust1), ]
       dat2 <- test_dat[which(rownames(dat) %in% clust2), ]
 
-      .GlobalEnv$res_split[which(rownames(.GlobalEnv$res_split) %in% clust1), j] <- 1
-      .GlobalEnv$res_split[which(rownames(.GlobalEnv$res_split) %in% clust2), j] <- 2
+      Env$res_split[which(rownames(Env$res_split) %in% clust1), j] <- 1
+      Env$res_split[which(rownames(Env$res_split) %in% clust2), j] <- 2
 
-      if(is.null(.GlobalEnv$clust1all[[j]]) & is.null(.GlobalEnv$clust2all[[j]])){
-        .GlobalEnv$sigclust_p[, j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[, j] <- sigclust_obj[[2]]
+      if(is.null(Env$clust1all[[j]]) & is.null(Env$clust2all[[j]])){
+        Env$sigclust_p[, j] <- sigclust_obj[[1]]
+        Env$sigclust_z[, j] <- sigclust_obj[[2]]
       }
-      if(!is.null(.GlobalEnv$clust1all[[j]]) & all(rownames(test_dat) %in% .GlobalEnv$clust1all[[j]])){
-        .GlobalEnv$sigclust_p[which(rownames(.GlobalEnv$res_split) %in% clust1), j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[which(rownames(.GlobalEnv$res_split) %in% clust1), j] <- sigclust_obj[[2]]
-      }
-
-      if(!is.null(.GlobalEnv$clust2all[[j]]) & all(rownames(test_dat) %in% .GlobalEnv$clust2all[[j]])){
-        .GlobalEnv$sigclust_p[which(rownames(.GlobalEnv$res_split) %in% clust2), j] <- sigclust_obj[[1]]
-        .GlobalEnv$sigclust_z[which(rownames(.GlobalEnv$res_split) %in% clust2), j] <- sigclust_obj[[2]]
+      if(!is.null(Env$clust1all[[j]]) & all(rownames(test_dat) %in% Env$clust1all[[j]])){
+        Env$sigclust_p[which(rownames(Env$res_split) %in% clust1), j] <- sigclust_obj[[1]]
+        Env$sigclust_z[which(rownames(Env$res_split) %in% clust1), j] <- sigclust_obj[[2]]
       }
 
-      .GlobalEnv$clust1all[[j+1]] <- clust1
-      .GlobalEnv$clust2all[[j+1]] <- clust2
+      if(!is.null(Env$clust2all[[j]]) & all(rownames(test_dat) %in% Env$clust2all[[j]])){
+        Env$sigclust_p[which(rownames(Env$res_split) %in% clust2), j] <- sigclust_obj[[1]]
+        Env$sigclust_z[which(rownames(Env$res_split) %in% clust2), j] <- sigclust_obj[[2]]
+      }
+
+      Env$clust1all[[j+1]] <- clust1
+      Env$clust2all[[j+1]] <- clust2
 
       clustonly(dat1, j = j+1)
       clustonly(dat2, j = j+1)
@@ -187,19 +188,24 @@ split_output_withsig <- function(test_dat, maxSplit = 10, minSize = 10){
   }
 
   j <- 1
-  .GlobalEnv$res_split <- matrix(NA, nrow = nrow(test_dat), ncol = J)
-  .GlobalEnv$sigclust_p <- matrix(NA, nrow = nrow(test_dat), ncol = J)
-  .GlobalEnv$sigclust_z <- matrix(NA, nrow = nrow(test_dat), ncol = J)
-  rownames(.GlobalEnv$res_split) <- rownames(test_dat)
-  .GlobalEnv$i <- 1
-  .GlobalEnv$clust1all <- vector(mode = "list", length = J)
-  .GlobalEnv$clust2all <- vector(mode = "list", length = J)
+  Env$res_split <- matrix(NA, nrow = nrow(test_dat), ncol = J)
+  Env$sigclust_p <- matrix(NA, nrow = nrow(test_dat), ncol = J)
+  Env$sigclust_z <- matrix(NA, nrow = nrow(test_dat), ncol = J)
+  rownames(Env$res_split) <- rownames(test_dat)
+  Env$i <- 1
+  Env$clust1all <- vector(mode = "list", length = J)
+  Env$clust2all <- vector(mode = "list", length = J)
 
   clustonly(test_dat, j = 1)
 
-  res_split_now <- .GlobalEnv$res_split
-  sigclust_p <- .GlobalEnv$sigclust_p
-  sigclust_z <- .GlobalEnv$sigclust_z
-  res_all <- list(res_split_now, sigclust_p, sigclust_z)
+  res_split_now <- Env$res_split
+  sigclust_p <- Env$sigclust_p
+  sigclust_z <- Env$sigclust_z
+
+  res2 <- as.data.frame(res_split_now)
+  res2$clust <- apply(res2[, 1:ncol(res2)], 1 , paste , collapse = "-" )
+  res2 <- data.frame(names = rownames(res2), cluster = clust_clean(res2$clust))
+
+  res_all <- list(res2, sigclust_p, sigclust_z)
   return(res_all)
 }

@@ -9,9 +9,9 @@
 #' \eqn{\alpha} is a vector with the same length as the numer of genes,
 #' and \eqn{\beta} is a vector with the same length as the numer of cells.
 #' The order of elements in vectors \eqn{\alpha} or \eqn{\beta} is the same as rows (cells) or
-#' genes (columns) of input data. Besure to remove cells/genes with all zeros.
+#' genes (columns) of input data. Be sure to remove cells/genes with all zeros.
 #'
-#' @param test_set a UMI count data matirx with cells as rows and genes as columns
+#' @param test_set a UMI count data matrix with cells as rows and genes as columns
 #'
 #' @return a numeric vector with elements of parameter estimates from overall offset, cell effect and gene effect
 #'
@@ -20,7 +20,6 @@
 #' test_set <- matrix(rpois(500, 0.5), nrow = 10)
 #' para_est_new(test_set)
 #'
-#' @export
 para_est_new <- function(test_set){
 
   test_set <- test_set[, which(colSums(test_set) > 0)]
@@ -58,8 +57,9 @@ para_est_new <- function(test_set){
 #' @import purrr
 #'
 #' @export
-adj_CDF_logit <- function(dat, change = 1e-10){
-  test_set <- dat
+adj_CDF_logit <- function(test_set, change = 1e-10){
+
+  stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
   test_set <- test_set[, which(colSums(test_set) > 0)]
   n <- nrow(test_set)
   d <- ncol(test_set)

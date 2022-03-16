@@ -12,8 +12,7 @@
 #'
 #' logit(0.5)
 #'
-#' @export
-logit <- function (x) {
+logit <- function (p) {
   #, min = 0, max = 1
   #p <- (x - min)/(max - min)
   log(p/(1 - p))
@@ -86,7 +85,6 @@ cluster_size <- function(test_dat){
 #' p + theme_dirk(time_stamp = TRUE)
 #'
 #'
-#' @export
 theme_dirk <- function(base_size = 22,
                        base_family = "",
                        base_line_size = base_size/22,
@@ -595,7 +593,6 @@ null_eigval <- function(x, n, p, icovest = 1, bkgd_pca = FALSE) {
 #'
 #' @name fwer_cutoff-generic
 #' @docType methods
-#' @export
 #' @keywords internal
 fwer_cutoff <- function(obj, ...) {
   UseMethod("fwer_cutoff", obj)
@@ -610,7 +607,6 @@ fwer_cutoff <- function(obj, ...) {
 #' @param ... other parameters to be used by the function
 #'
 #' @name fwer_cutoff-shc
-#' @export
 #' @method fwer_cutoff shc
 #' @author Patrick Kimes
 fwer_cutoff.shc <- function(obj, alpha, ...) {

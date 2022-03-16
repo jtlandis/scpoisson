@@ -32,36 +32,88 @@
 #'
 #'
 #' @export
-logit_Seurat_clustering <- function(test_set, pdat = NULL, PCA = T, N = 15, pres = 0.8){
+logit_Louvain_clustering <- function(scppp_obj, pdat = NULL, PCA = T,
+                                     N = 15, pres = 0.8,
+                                     tsne = F, umap = F){
 
-  sdata <- as(as.matrix(t(test_set)), "dgCMatrix")
-  sdata <- Seurat::CreateSeuratObject(counts = sdata)
+  test_set <- scppp_obj[["data"]]
+  stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
+  sdat <- as(as.matrix(t(test_set)), "dgCMatrix")
+  sdata <- Seurat::CreateSeuratObject(counts = sdat)
   if(is.null(pdat)){
     pdat <- adj_CDF_logit(test_set)
   }
 
-  sdata@assays$RNA@scale.data=t(pdat)
-  sdata[["RNA"]]@scale.data = t(pdat)
-
+  sdata[["scppp"]] <- Seurat::CreateAssayObject(counts = sdat)
+  sdata[["scppp"]] <- SeuratObject::SetAssayData(sdata[["scppp"]], slot = "scale.data", new.data = t(pdat))
+  .n <- ncol(t(pdat)) - 1L
+  N <- min(c(N, .n - 1L))
   if(PCA){
-    sdata <- Seurat::RunPCA(object = sdata,  features = rownames(sdata))
-    sdata <- Seurat::FindNeighbors(sdata, reduction = "pca", dims = 1:N)
+    sdata <- Seurat::RunPCA(object = sdata, assay = "scppp",
+                            reduction.name = "scppp_pca",
+                            features = rownames(sdata),
+                            npcs = min(c(50, .n)))
+    sdata <- Seurat::FindNeighbors(sdata, reduction = "scppp_pca",
+                                   dims = 1:N)
+    sdata <- Seurat::FindClusters(sdata, graph.name = "scppp_snn", resolution = pres)
+    if(umap){
+      sdata <- Seurat::RunUMAP(sdata, reduction = "scppp_pca", dims = 1:N,
+                               assay = "scppp",
+                               reduction.name = "scppp_umap")
+    }
+
+    if(tsne){
+      sdata <- Seurat::RunTSNE(object = sdata, reduction="scppp_pca",
+                               assay = "scppp",
+                               reduction.name = "scppp_tsne",
+                               dims = 1:N, do.fast = TRUE, check_duplicates = FALSE)
+    }
+
+  } else {
+    #do FindNeighbors on pdata instead of PCA cell embeddings
+    neighbor.graphs <- Seurat::FindNeighbors(pdat, dims = 1:ncol(pdat))
+    graph.name <- paste0("scppp_", names(neighbor.graphs))
+    for (ii in seq_along(graph.name)) {
+      if (inherits(x = neighbor.graphs[[ii]], what = "Graph")) {
+        DefaultAssay(object = neighbor.graphs[[ii]]) <- "scppp"
+      }
+      sdata[[graph.name[[ii]]]] <- neighbor.graphs[[ii]]
+    }
+    sdata <- Seurat::FindClusters(sdata, graph.name = "scppp_snn", resolution = pres)
+    if(umap){
+      sdata[["scppp_umap"]] <- RunUMAP(pdat[, 1:N], assay = "scppp")
+    }
+    if(tsne){
+      sdata[["scppp_tsne"]] <- RunTSNE(pdat[, 1:N], assay = "scppp")
+    }
+
   }
 
-  if(!PCA){
-    sdata <- Seurat::RunPCA(object = sdata,  features = rownames(sdata))
-    sdata@reductions$pca@cell.embeddings <- pdat
-    sdata <- Seurat::FindNeighbors(sdata, reduction = "pca", dims = 1:ncol(pdat))
+
+
+  if(tsne){
+    tsne_data <- Seurat::Embeddings(object = sdata[["scppp_tsne"]])
   }
+  else tsne_data <- NULL
+  if(umap){
+    umap_data <- Seurat::Embeddings(object = sdata[["scppp_umap"]])
+  }
+  else umap_data <- NULL
 
-  sdata <- Seurat::FindClusters(sdata, resolution = pres)
-  sdata <- Seurat::RunUMAP(sdata, dims = 1:N)
-  sdata <- Seurat::RunTSNE(object = sdata, dims.use = 1:N, do.fast = TRUE, check_duplicates = FALSE)
-
-  tsne_data <- Seurat::Embeddings(object = sdata[["tsne"]])
-  umap_data <- Seurat::Embeddings(object = sdata[["umap"]])
+  res_clust <- data.frame(names = names(sdata$seurat_clusters), cluster = sdata$seurat_clusters)
 
   return(list(sdata,
               tsne_data, umap_data,
-              sdata$seurat_clusters))
+              res_clust))
+}
+
+
+new_scppp_Seurat <- function(sdata, pdata) {
+
+  obj <- Seurat::CreateSeuratObject(counts = t(sdata))
+  assay_sc <- Seurat::CreateAssayObject(counts = t(sdata))
+  assay_sc@scale.data <- t(pdata)
+
+  obj@assays[["scppp"]] <- assay_sc
+  return(obj)
 }

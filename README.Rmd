@@ -1,0 +1,105 @@
+---
+title: "README"
+author: "Yue Pan"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+# library(ggplot2)
+# library(dplyr)
+# library(purrr)
+# library(here)
+# 
+# source(here("R/utils.R"))
+# source(here("R/qq_env_small.R"))
+# source(here("R/data_representation.R"))
+# source(here("R/hclustDepart.R"))
+# source(here("R/seurat_plus.R"))
+
+```
+
+
+## Overview
+
+The R package scppp is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on departure as a novel data representation.
+
+## Installation
+
+Please install from CRAN ???.
+
+```{r install, eval = FALSE}
+#utils::install.packages("scppp")
+library(scpoissonmodel)
+```
+
+## Visualization
+
+The examples below show Q-Q envelope plots comparing sample data with a theoretical Poisson distribution given the Poisson parameter (mean). The input can be either a numeric vector or a numeric matrix consists of integers. If the input is a numeric matrix, the GLM-PCA algorithm will be applied for parameter estimation. Then some matrix entries (default 200) will be selected as sample data and compare with the theoretical distribution. 
+
+The code here is specific for validation of independent Poisson distributions, but such idea can be applied to different types of data under different assumptions of distributions.
+
+```{r example1, message=FALSE, warning=FALSE}
+# Numeric vector as input
+set.seed(1234)
+scppp_obj <- scppp(rpois(200, 3L))
+qqplot_env_pois(scppp_obj, 3, 100)
+
+# Count matrix as input
+set.seed(1234)
+dat <- matrix(c(rpois(300, 5L), rpois(200, 1L)), ncol = 20)
+scppp_obj <- scppp(dat)
+qqplot_env_pois(scppp_obj, L = 2, lambda = 5) # small L for a data with less variance
+  
+```
+
+Please refer to vignette for a more detailed guide, including the application in the real data.
+
+## Clustering
+
+The example below shows clustering pipeline based on a simplified two-cluster data. The results are save in a list. The first element contains the clustering results for each sample, where the cluster label shows the top-down cluster in a tree structure. E.g. Both cluster '1-1' and cluster '1-2' are subclusters from cluster '1' after first split; while cluster '1-1' and cluster '2-1' come from different cluster after first split.  The second element is a matrix with samples as rows and cluster index as columns, where each entry contains the p-value corresponding to each cell at each split.
+
+This simplified example only contains two clusters, with cluster label either '1' or '2'.
+
+```{r example2, message=FALSE, warning=FALSE}
+
+set.seed(1234)
+para1 <- matrix(c(rep(2L, 20), rep(1L, 40)), ncol = 1)
+para2 <- matrix(c(rep(2L, 10), rep(1L, 20)), nrow = 1)
+dat <- para1 %*% para2
+dat[31:60, 1:10] <- dat[31:60, 1:10] + 10L
+counts <- map_dbl(dat, ~rpois(1, .x)) %>% 
+    matrix(ncol = 30)
+storage.mode(counts) <- "integer" 
+colnames(counts) <- paste0("c", 1:30)
+rownames(counts) <- paste0("g", 1:60)
+scppp_obj <- scppp(t(counts))
+heatmap(scppp_obj[["data"]])
+res <- HclustDepart(scppp_obj, maxSplit = 3)
+
+# cluster results for each cell after each split
+head(res[[1]])
+
+# p-value for each cell after each split
+head(res[[2]])
+
+```
+
+Please refer to vignette for a more detailed guide, including the application in the real data.
+
+Another option is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. 
+
+```{r example3, message=FALSE, warning=FALSE}
+
+res2 <- logit_Louvain_clustering(scppp_obj)
+head(res2[[4]])
+
+```
+
+## Issues and bug reports
+
+Please report any issues at ???.
+
+## References
+
+

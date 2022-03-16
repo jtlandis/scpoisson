@@ -22,7 +22,6 @@
 #' @import dplyr
 #' @import stats
 #'
-#' @export
 new_quantile <- function(data, sample){
 
   if(!is.numeric(data)){
@@ -70,7 +69,6 @@ new_quantile <- function(data, sample){
 #' @import purrr
 #' @import stats
 #'
-#' @export
 interpolate <- function(df, reference, sample_id){
   list_ <- c(list(df), lapply(1:nrow(reference), function(x) x))
   df <- purrr::reduce(list_, function(df, i, reference){
@@ -116,7 +114,6 @@ interpolate <- function(df, reference, sample_id){
 #' dfq <- new_quantile(Q, "Q")
 #' df_tq <- qq_interpolation(dfp, dfq, "P", "Q")
 #'
-#' @export
 qq_interpolation <- function(dfp, dfq, sample1, sample2){
 
 
@@ -206,7 +203,6 @@ qqplot_small_test <- function(P, Q, sample1, sample2){
 #' P <- rpois(100, 3)
 #' new_quantile_pois(P, 3)
 #'
-#' @export
 new_quantile_pois <- function(data, lambda){
 
   if(!is.numeric(data)){
@@ -246,7 +242,6 @@ new_quantile_pois <- function(data, lambda){
 #' @examples
 #' nboot_small(rpois(100, 3), 3, 200)
 #'
-#' @export
 nboot_small <- function(x, lambda, R) {
   n <- length(x)
   do.call(rbind,
@@ -279,7 +274,12 @@ nboot_small <- function(x, lambda, R) {
 #' @import ggplot2
 #'
 #' @export
-qqplot_env_pois <- function(sample_data, lambda, envelope_size = 100){
+qqplot_env_pois <- function(sample_data, lambda, envelope_size = 100, ...) {
+  UseMethod("qqplot_env_pois")
+}
+
+#' @export
+qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100){
 
   test_raw <- sample_data
 
@@ -323,5 +323,81 @@ qqplot_env_pois <- function(sample_data, lambda, envelope_size = 100){
     xlim(c(min, max)) + ylim(c(min, max))
   return(p)
 }
+
+select_data <- function(test_dat, Gfit_dat, lambda,
+                        select_by = "entry", entry_size = 200){
+
+  if(select_by == "entry"){
+    test_raw <- as.vector(test_dat)
+    fitdata <- as.vector(Gfit_dat)
+    order <- order(abs(fitdata - lambda), decreasing = F)
+    test_raw <- test_raw[order]
+    return(test_raw[1:entry_size])
+  }
+
+  if(select_by == "cell"){
+    cell_mean <- rowMeans(test_dat)
+    measure <- abs(cell_mean - lambda)
+    index <- which(measure == min(measure))
+
+    cell <- rownames(test_dat)[index]
+    cell_sd <- rowSds(test_dat)[index]
+    select_cell <- cell[which(cell_sd == max(cell_sd))]
+    return(test_dat[which(rownames(test_dat) == select_cell[1]), ])
+  }
+
+  if(select_by == "gene"){
+    gene_mean <- colMeans(test_dat)
+    measure <- abs(gene_mean - lambda)
+    index <- which(measure == min(measure))
+
+    gene <- colnames(test_dat)[index]
+    gene_sd <- colSds(test_dat)[index]
+    select_gene <- gene[which(gene_sd == max(gene_sd))]
+    return(test_dat[, which(colnames(test_dat) == select_gene[1])])
+  }
+
+}
+
+apply_glmpca <- function(rawdata, L = 10){
+
+  set.seed(1234)
+  test_df <- t(rawdata)
+  test_df <- test_df[which(rowSums(test_df) > 0), ]
+  ctl <- list(maxIter=500,eps=1e-4)
+  res <- glmpca::glmpca(test_df, L=L, fam = "poi", sz=colSums(test_df),verbose=TRUE,ctl=ctl)
+  factors <- res$factors
+
+  U <- as.matrix(res$factors)
+  V <- as.matrix(res$loadings)
+  Ni <- colSums(test_df)
+  Vj <- as.vector(as.matrix(res$coefX))
+  Gfit_dat <- exp(t(t(U %*% t(V)) + Vj) + log(Ni))
+  return((Gfit_dat))
+}
+
+#' @export
+qqplot_env_pois.scppp <- function(scppp_obj, lambda,
+                                  L = 10,
+                                  select_by = "entry",
+                                  entry_size = 200, envelope_size = 100){
+  test_data <- scppp_obj[["data"]]
+  if(is.vector(test_data) && is.atomic(test_data)){
+    qqplot_env_pois.numeric(test_data, lambda, envelope_size)
+  }
+  else {
+    test <- as.matrix(test_data)
+    Gfit_dat <- apply_glmpca(test_data, L)
+    sample_data <- select_data(test_data, Gfit_dat, lambda, select_by, entry_size)
+    qqplot_env_pois.numeric(sample_data, lambda, envelope_size)
+  }
+}
+
+
+
+
+
+
+
 
 
