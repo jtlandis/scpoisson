@@ -98,6 +98,7 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' @export
 HclustDepart <- function(data, maxSplit = 10, minSize = 10, sim = 100, ...) UseMethod("HclustDepart")
 
+#' @export
 #' @retuns scppp
 HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100) {
 
@@ -109,6 +110,7 @@ HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100) {
   return(data)
 }
 
+#' @export
 #' @returns scppp_hclust_results
 HclustDepart.matrix <- function(data, maxSplit = 10, minSize = 10, sim = 100){
 

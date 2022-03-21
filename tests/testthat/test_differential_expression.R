@@ -11,12 +11,14 @@ storage.mode(counts) <- "integer"
 colnames(counts) <- paste0("c", 1:30)
 rownames(counts) <- paste0("g", 1:60)
 scppp_obj <- scppp(t(counts))
-scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3)
-diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t = F)
+scppp_obj <- suppressWarnings(HclustDepart(scppp_obj, maxSplit = 3))
+scppp_obj <- adj_CDF_logit(scppp_obj)
+
 
 test_that("differential_expression works as expected", {
   # cluster label should match the ones from clustering results
   expect_error(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2-1", t = F))
+  scppp_obj <- suppressWarnings(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t = F))
   # columns as as expected
   expect_equal(colnames(scppp_obj[["de_results"]]$Hclust),
                c("variable", "clust1_mean", "clust2_mean", "clust1_n", "clust2_n",

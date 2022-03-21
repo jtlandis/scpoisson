@@ -23,4 +23,5 @@ Imports:
     glmpca,
     SingleCellExperiment,
     Seurat,
-    Rclusterpp
+    Rclusterpp,
+    magrittr

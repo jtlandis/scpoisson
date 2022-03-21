@@ -4,12 +4,14 @@
 \alias{HclustDepart}
 \title{Cluster cells in a recursive way}
 \usage{
-HclustDepart(scppp_obj, maxSplit = 10, minSize = 10, sim = 100)
+HclustDepart(data, maxSplit = 10, minSize = 10, sim = 100, ...)
 }
 \arguments{
 \item{maxSplit}{the maximum allowable number of splitting steps, default 10}
 
 \item{minSize}{the minimal allowable cluster size, default 10}
+
+\item{sim}{a numeric value specifying the number of simulations for p-value calculation, i.e. n_sim argument when apply sigclust2 (default = 100)}
 
 \item{test_dat}{a UMI count data frame or matrix with cells as rows and genes as columns}
 }

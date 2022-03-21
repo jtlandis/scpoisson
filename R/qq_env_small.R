@@ -18,7 +18,6 @@
 #' P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
 #' new_quantile(P, "P")
 #'
-#' @importFrom magrittr %>%
 #' @import dplyr
 #' @import stats
 #'

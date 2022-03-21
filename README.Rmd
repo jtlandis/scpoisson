@@ -6,18 +6,18 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-library(ggplot2)
-library(dplyr)
-library(purrr)
-library(here)
-
-source(here("R/utils.R"))
-source(here("R/qq_env_small.R"))
-source(here("R/data_representation.R"))
-source(here("R/hclustDepart.R"))
-source(here("R/seurat_plus.R"))
-source(here("R/Object_representation.R"))
-source(here("R/differential_expression.R"))
+# library(ggplot2)
+# library(dplyr)
+# library(purrr)
+# library(here)
+# 
+# source(here("R/utils.R"))
+# source(here("R/qq_env_small.R"))
+# source(here("R/data_representation.R"))
+# source(here("R/hclustDepart.R"))
+# source(here("R/seurat_plus.R"))
+# source(here("R/Object_representation.R"))
+# source(here("R/differential_expression.R"))
 ```
 
 
@@ -32,6 +32,7 @@ Please install from CRAN ???.
 ```{r install, eval = FALSE}
 #utils::install.packages("scppp")
 library(scpoissonmodel)
+library(purrr)
 ```
 
 ## Visualization
@@ -69,9 +70,8 @@ para1 <- matrix(c(rep(2L, 20), rep(1L, 40)), ncol = 1)
 para2 <- matrix(c(rep(2L, 10), rep(1L, 20)), nrow = 1)
 dat <- para1 %*% para2
 dat[31:60, 1:10] <- dat[31:60, 1:10] + 10L
-counts <- map_dbl(dat, ~rpois(1, .x)) %>% 
+counts <- map_int(dat, ~rpois(1, .x)) %>% 
     matrix(ncol = 30)
-storage.mode(counts) <- "integer" 
 colnames(counts) <- paste0("cell", 1:30)
 rownames(counts) <- paste0("gene", 1:60)
 scppp_obj <- scppp(t(counts))
@@ -98,6 +98,7 @@ head(scppp_obj[["clust_results"]]$Lclust[[4]])
 ## Differential Expression
 
 ```{r example4, message=FALSE, warning=FALSE}
+scppp_obj <- adj_CDF_logit(scppp_obj) 
 scppp_obj <- diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t = F)
 head(scppp_obj[["de_results"]]$Hclust)
 ```

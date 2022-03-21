@@ -10,8 +10,8 @@ test_that("scppp expects integers", {
 })
 
 test_that("scppp S3 dispatch works", {
-  sloop::s3_dispatch(new_scppp(c(1:10)))
-  sloop::s3_dispatch(new_scppp(matrix(1:10)))
+  expect_equal(scppp(c(1:10))[["data"]], c(1:10))
+  expect_equal(scppp(matrix(1:10))[["data"]], matrix(1:10))
 })
 
 set.seed(1234)

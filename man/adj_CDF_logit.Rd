@@ -4,7 +4,7 @@
 \alias{adj_CDF_logit}
 \title{A novel data representation based on Poisson probability}
 \usage{
-adj_CDF_logit(test_set, change = 1e-10)
+adj_CDF_logit(data, change = 1e-10, ...)
 }
 \arguments{
 \item{change}{a numeric value used to correct for exactly 0 and 1 before logit transformation.

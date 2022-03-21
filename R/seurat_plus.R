@@ -32,9 +32,12 @@
 #'
 #'
 #' @export
-LouvainDepart <- function(data, ...) UseMethod("LouvainDepart")
-
+LouvainDepart <- function(data, pdat = NULL, PCA = T,
+                          N = 15, pres = 0.8,
+                          tsne = F, umap = F, ...) UseMethod("LouvainDepart")
+#' @export
 #' @retuns scppp
+
 LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
                                      N = 15, pres = 0.8,
                                      tsne = F, umap = F){
@@ -44,9 +47,11 @@ LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
   data$clust_results[["Lclust"]] <- LouvainDepart.matrix(test_set, pdat, PCA,
                        N, pres,
                        tsne, umap)
+  return(data)
 }
-
+#' @export
 #' @returns scppp_hclust_results
+
 LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
                           N = 15, pres = 0.8,
                           tsne = F, umap = F){

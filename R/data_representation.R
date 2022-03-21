@@ -59,6 +59,7 @@ para_est_new <- function(test_set){
 #' @export
 adj_CDF_logit <- function(data, change = 1e-10, ...) UseMethod("adj_CDF_logit")
 
+#' @export
 #' @retuns scppp
 adj_CDF_logit.scppp <- function(data, change = 1e-10) {
 
@@ -67,6 +68,7 @@ adj_CDF_logit.scppp <- function(data, change = 1e-10) {
   return(data)
 }
 
+#' @export
 #' @returns scppp_departure
 adj_CDF_logit.matrix <- function(data, change = 1e-10){
 
