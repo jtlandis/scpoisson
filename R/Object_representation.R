@@ -12,9 +12,8 @@ new_scppp <- function(data, sample = c("rows", "columns"), ...) {
   UseMethod("new_scppp")
 }
 
-new_scppp.integer <- function(data, sample = "rows") {
+new_scppp.integer <- function(data, sample = NULL) {
   stopifnot(typeof(data)=="integer")
-  sample <- match.arg(sample, choices = c("rows", "columns"))
   structure(
     list(data = data),
     class = "scppp"

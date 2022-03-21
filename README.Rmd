@@ -6,17 +6,18 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-# library(ggplot2)
-# library(dplyr)
-# library(purrr)
-# library(here)
-# 
-# source(here("R/utils.R"))
-# source(here("R/qq_env_small.R"))
-# source(here("R/data_representation.R"))
-# source(here("R/hclustDepart.R"))
-# source(here("R/seurat_plus.R"))
+library(ggplot2)
+library(dplyr)
+library(purrr)
+library(here)
 
+source(here("R/utils.R"))
+source(here("R/qq_env_small.R"))
+source(here("R/data_representation.R"))
+source(here("R/hclustDepart.R"))
+source(here("R/seurat_plus.R"))
+source(here("R/Object_representation.R"))
+source(here("R/differential_expression.R"))
 ```
 
 
@@ -42,12 +43,12 @@ The code here is specific for validation of independent Poisson distributions, b
 ```{r example1, message=FALSE, warning=FALSE}
 # Numeric vector as input
 set.seed(1234)
-scppp_obj <- scppp(rpois(200, 3L))
+scppp_obj <- scppp(rpois(200, 3))
 qqplot_env_pois(scppp_obj, 3, 100)
 
 # Count matrix as input
 set.seed(1234)
-dat <- matrix(c(rpois(300, 5L), rpois(200, 1L)), ncol = 20)
+dat <- matrix(c(rpois(300, 5), rpois(200, 1)), ncol = 20)
 scppp_obj <- scppp(dat)
 qqplot_env_pois(scppp_obj, L = 2, lambda = 5) # small L for a data with less variance
   
@@ -71,17 +72,17 @@ dat[31:60, 1:10] <- dat[31:60, 1:10] + 10L
 counts <- map_dbl(dat, ~rpois(1, .x)) %>% 
     matrix(ncol = 30)
 storage.mode(counts) <- "integer" 
-colnames(counts) <- paste0("c", 1:30)
-rownames(counts) <- paste0("g", 1:60)
+colnames(counts) <- paste0("cell", 1:30)
+rownames(counts) <- paste0("gene", 1:60)
 scppp_obj <- scppp(t(counts))
 heatmap(scppp_obj[["data"]])
-res <- HclustDepart(scppp_obj, maxSplit = 3)
+scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3)
 
 # cluster results for each cell after each split
-head(res[[1]])
+head(scppp_obj[["clust_results"]]$Hclust[[1]])
 
 # p-value for each cell after each split
-head(res[[2]])
+head(scppp_obj[["clust_results"]]$Hclust[[2]])
 
 ```
 
@@ -90,11 +91,17 @@ Please refer to vignette for a more detailed guide, including the application in
 Another option is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. 
 
 ```{r example3, message=FALSE, warning=FALSE}
-
-res2 <- logit_Louvain_clustering(scppp_obj)
-head(res2[[4]])
-
+scppp_obj <- LouvainDepart(scppp_obj)
+head(scppp_obj[["clust_results"]]$Lclust[[4]])
 ```
+
+## Differential Expression
+
+```{r example4, message=FALSE, warning=FALSE}
+scppp_obj <- diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t = F)
+head(scppp_obj[["de_results"]]$Hclust)
+```
+
 
 ## Issues and bug reports
 

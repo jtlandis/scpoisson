@@ -32,11 +32,26 @@
 #'
 #'
 #' @export
-logit_Louvain_clustering <- function(scppp_obj, pdat = NULL, PCA = T,
+LouvainDepart <- function(data, ...) UseMethod("LouvainDepart")
+
+#' @retuns scppp
+LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
                                      N = 15, pres = 0.8,
                                      tsne = F, umap = F){
 
-  test_set <- scppp_obj[["data"]]
+  test_set <- data[["data"]]
+  stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
+  data$clust_results[["Lclust"]] <- LouvainDepart.matrix(test_set, pdat, PCA,
+                       N, pres,
+                       tsne, umap)
+}
+
+#' @returns scppp_hclust_results
+LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
+                          N = 15, pres = 0.8,
+                          tsne = F, umap = F){
+
+  test_set <- data
   stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
   sdat <- as(as.matrix(t(test_set)), "dgCMatrix")
   sdata <- Seurat::CreateSeuratObject(counts = sdat)

@@ -32,7 +32,8 @@
 #'
 sigp <- function(test_dat, minSize = 10, sim = 100){
 
-  stopifnot('Require a matrix or data frame as input' = is.matrix(test_dat))
+  stopifnot('Require a matrix' = is.matrix(test_dat))
+  stopifnot('Remove rows with only zero values' = min(rowSums(test_dat)) > 0)
   if(nrow(test_dat) <= minSize) {
     return(list(NA,NA, NA, NA))
   }
@@ -74,6 +75,7 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' @param test_dat a UMI count data frame or matrix with cells as rows and genes as columns
 #' @param maxSplit the maximum allowable number of splitting steps, default 10
 #' @param minSize the minimal allowable cluster size, default 10
+#' @param sim a numeric value specifying the number of simulations for p-value calculation, i.e. n_sim argument when apply sigclust2 (default = 100)
 #'
 #' @return a list with the following elements:
 #' \itemize{
@@ -94,9 +96,26 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' split_output_withsig(test_set)
 #'
 #' @export
-HclustDepart <- function(scppp_obj, maxSplit = 10, minSize = 10, sim = 100){
+HclustDepart <- function(data, maxSplit = 10, minSize = 10, sim = 100, ...) UseMethod("HclustDepart")
 
-  test_dat <- scppp_obj[["data"]]
+#' @retuns scppp
+HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100) {
+
+  test_dat <- data[["data"]]
+  data$clust_results[["Hclust"]] <- HclustDepart.matrix(test_dat,
+                                                        maxSplit,
+                                                        minSize,
+                                                        sim)
+  return(data)
+}
+
+#' @returns scppp_hclust_results
+HclustDepart.matrix <- function(data, maxSplit = 10, minSize = 10, sim = 100){
+
+  test_dat <- data
+  stopifnot('Remove rows with only zero values' = min(rowSums(test_dat)) > 0)
+  test_dat <- test_dat[, which(colSums(test_dat) > 0)]
+
   S <- minSize
   J <- maxSplit
   Env <- new.env()
@@ -159,8 +178,10 @@ HclustDepart <- function(scppp_obj, maxSplit = 10, minSize = 10, sim = 100){
       clust <- cutree(hc, k = 2)
       clust1 <- names(clust)[which(clust == 1)]
       clust2 <- names(clust)[which(clust == 2)]
-      dat1 <- test_dat[which(rownames(dat) %in% clust1), ]
-      dat2 <- test_dat[which(rownames(dat) %in% clust2), ]
+      dat1 <- test_dat[which(rownames(dat) %in% clust1),]
+      dat1 <- dat1[, which(colSums(dat1) > 0)]
+      dat2 <- test_dat[which(rownames(dat) %in% clust2),]
+      dat2 <- dat2[, which(colSums(dat2) > 0)]
 
       Env$res_split[which(rownames(Env$res_split) %in% clust1), j] <- 1
       Env$res_split[which(rownames(Env$res_split) %in% clust2), j] <- 2

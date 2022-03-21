@@ -57,9 +57,23 @@ para_est_new <- function(test_set){
 #' @import purrr
 #'
 #' @export
-adj_CDF_logit <- function(test_set, change = 1e-10){
+adj_CDF_logit <- function(data, change = 1e-10, ...) UseMethod("adj_CDF_logit")
 
-  stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
+#' @retuns scppp
+adj_CDF_logit.scppp <- function(data, change = 1e-10) {
+
+  test_dat <- data[["data"]]
+  data$representation[["departure"]] <- adj_CDF_logit.matrix(test_dat, change)
+  return(data)
+}
+
+#' @returns scppp_departure
+adj_CDF_logit.matrix <- function(data, change = 1e-10){
+
+  test_set <- data
+  stopifnot('Require a matrix as input' = is.matrix(test_set))
+  stopifnot('Remove columns with only zero values' = min(colSums(test_set)) > 0)
+  stopifnot('Remove rows with only zero values' = min(rowSums(test_set)) > 0)
   test_set <- test_set[, which(colSums(test_set) > 0)]
   n <- nrow(test_set)
   d <- ncol(test_set)
