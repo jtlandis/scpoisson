@@ -1,19 +1,19 @@
 #' Parameter estimates based on two-way approximation
 #'
-#' para_est_new returns a vector consists of parameter estimates for overall offset,
+#' This function returns a vector consists of parameter estimates for overall offset,
 #' cell effect, and gene effect.
 #'
 #' This is a function used to calculate parameter estimates based on
-#' \eqn{\tilde\lambda_{gc}  = e^{\mu + \alpha_g + \beta_c}},
+#' \eqn{\lambda_{gc}  = e^{\mu + \alpha_g + \beta_c}},
 #' where \eqn{\mu} is the overall offset,
 #' \eqn{\alpha} is a vector with the same length as the numer of genes,
 #' and \eqn{\beta} is a vector with the same length as the numer of cells.
 #' The order of elements in vectors \eqn{\alpha} or \eqn{\beta} is the same as rows (cells) or
-#' genes (columns) of input data. Be sure to remove cells/genes with all zeros.
+#' genes (columns) from input data. Be sure to remove cells/genes with all zeros.
 #'
-#' @param test_set a UMI count data matrix with cells as rows and genes as columns
+#' @param test_set A UMI count data matrix with cells as rows and genes as columns
 #'
-#' @return a numeric vector with elements of parameter estimates from overall offset, cell effect and gene effect
+#' @return A numeric vector containing parameter estimates from overall offset (first element), cell effect (same order as rows) and gene effect (same order as columns).
 #'
 #' @examples
 #'
@@ -38,29 +38,29 @@ para_est_new <- function(test_set){
 
 #' A novel data representation based on Poisson probability
 #'
-#' adj_CDF_logit returns a matrix of novel data representation with the same dimension as input data matrix.
+#' This function returns a matrix of a novel data representation with the same dimension as input data matrix.
 #'
-#' This is a function used to calcualte model departure as a novel data representation.
+#' This is a function used to calculate model departure as a novel data representation.
 #'
-#' @param dat a UMI count data matirx with cells as rows and genes as columns
-#' @param change a numeric value used to correct for exactly 0 and 1 before logit transformation.
+#' @param data A UMI count data matrix with cells as rows and genes as columns or an S3 object for class 'scppp'.
+#' @param change A numeric value used to correct for exactly 0 and 1 before logit transformation.
 #' Any values below \code{change} are set to be \code{change} and
-#' any values above \eqn{1- \code{change}} are set to be \eqn{1- \code{change}}.
+#' any values above \eqn{1- change} are set to be \eqn{1- change}.
 #'
-#' @return a matrix of departure as a novel data representation.
+#' @return A matrix of departure as a novel data representation (matrix as input) or an S3 object for class 'scppp' (scppp object as input; departure result will be stored in object scppp under "representation").
 #'
 #' @examples
-#'
+#' # Matrix as input
 #' test_set <- matrix(rpois(500, 0.5), nrow = 10)
-#' para_est_new(test_set)
-#'
-#' @import purrr
+#' adj_CDF_logit(test_set)
+#' # scppp object as input
+#' adj_CDF_logit(scppp(test_set))
 #'
 #' @export
 adj_CDF_logit <- function(data, change = 1e-10, ...) UseMethod("adj_CDF_logit")
 
 #' @export
-#' @retuns scppp
+#' @return scppp
 adj_CDF_logit.scppp <- function(data, change = 1e-10) {
 
   test_dat <- data[["data"]]
@@ -69,7 +69,7 @@ adj_CDF_logit.scppp <- function(data, change = 1e-10) {
 }
 
 #' @export
-#' @returns scppp_departure
+#' @return scppp_departure
 adj_CDF_logit.matrix <- function(data, change = 1e-10){
 
   test_set <- data

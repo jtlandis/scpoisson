@@ -7,20 +7,18 @@
 HclustDepart(data, maxSplit = 10, minSize = 10, sim = 100, ...)
 }
 \arguments{
-\item{maxSplit}{the maximum allowable number of splitting steps, default 10}
+\item{maxSplit}{A numeric value specifying the maximum allowable number of splitting steps (default 10).}
 
-\item{minSize}{the minimal allowable cluster size, default 10}
+\item{minSize}{A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).}
 
-\item{sim}{a numeric value specifying the number of simulations for p-value calculation, i.e. n_sim argument when apply sigclust2 (default = 100)}
+\item{sim}{A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100)}
 
-\item{test_dat}{a UMI count data frame or matrix with cells as rows and genes as columns}
+\item{test_dat}{A UMI count matrix with cells as rows and genes as columns or an S3 object for class 'scppp'.}
 }
 \value{
-a list with the following elements:
+A list with the following elements:
 \itemize{
-\item{\code{res_split_now}}: {a matrix with cells to cluster as rows, split index as columns,
-the entry in row \code{i} and column \code{j} denoting the cluster label
-for the cell \code{i} at split step \code{j}}
+\item{\code{res2}}: {a data frame contains two columns: names (cell names) and clusters (cluster label)}
 \item{\code{sigclust_p}}: {a matrix with cells to cluster as rows, split index as columns,
 the entry in row \code{i} and column \code{j} denoting the p-value
 for the cell \code{i} at split step \code{j}}
@@ -28,20 +26,22 @@ for the cell \code{i} at split step \code{j}}
 the entry in row \code{i} and column \code{j} denoting the z-score
 for the cell \code{i} at split step \code{j}}
 }
+If the input is an S3 object for class 'scppp', clustering result will be stored in object scppp under "clust_results".
 }
 \description{
-split_output_withsig returns a list with clustering results
+This function returns a list with clustering results.
 }
 \details{
 This is a function used to get cell clustering results in a recursive way.
-At each step, we re-calculate the two-way approximation again within each subcluster,
+At each step, the two-way approximation is re-calculated again within each subcluster,
 and the potential for further splitting is calculated using sigclust2.
 A non significant result suggests cells are reasonably homogeneous
-and may come from the same cell type. In addition, to avoid over splitting, we further require setting a
-maximum allowable number of splitting steps \code{maxSplit}
-(default is 10, which leads to at most \eqn{2^{10} = 1024}
-total number of clusters) and minimal allowable cluster size \code{minSize}
-(the number of cells in a cluster allowed for further splitting, default is 10) beforehand.
+and may come from the same cell type. In addition, to avoid over splitting,
+the maximum allowable number of splitting steps \code{maxSplit}
+(default is 10, which leads to at most \eqn{2^{10} = 1024} total number of clusters) and
+minimal allowable cluster size \code{minSize}
+(the number of cells in a cluster allowed for further splitting, default is 10)
+may be set beforehand.
 Thus the process is stopped when any of the conditions
 is satisfied: (1) the split is no longer statistically significant;
 (2) the maximum allowable number of splitting steps is reached;
@@ -50,6 +50,6 @@ is satisfied: (1) the split is no longer statistically significant;
 \examples{
 
 test_set <- matrix(rpois(500, 0.5), nrow = 10)
-split_output_withsig(test_set)
+HclustDepart(test_set)
 
 }

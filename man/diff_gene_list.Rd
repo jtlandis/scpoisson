@@ -15,24 +15,25 @@ diff_gene_list(
 )
 }
 \arguments{
-\item{data}{A departure matrix generated from adj_CDF_logit().}
+\item{data}{A departure matrix generated from adj_CDF_logit() or an S3 object for class 'scppp'.}
 
-\item{final_clust_res}{A data frame with clustering results generated from HclustDepart(). It contains two columns: names (cell names) and clusters (corresponding cluster label).}
+\item{final_clust_res}{A data frame with clustering results generated from HclustDepart(). It contains two columns: names (cell names) and clusters (cluster label).}
 
 \item{clust1}{One of the cluster label used to make comparison, default "1".}
 
 \item{clust2}{The other cluster label used to make comparison, default "2".}
 
-\item{t}{A logical value indicating whether the t-test should be used to make comparison. In general, for large cluster (\eqn{n \geq 30}), the t-test should be used. Otherwise, the Wilcoxon test might be more appropriate.}
+\item{t}{A logical value indicating whether the t-test should be used to make comparison. In general, for large cluster (\eqn{n \ge 30}), the t-test should be used. Otherwise, the Wilcoxon test might be more appropriate.}
 }
 \value{
-A data frame contains a list of genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).
+A data frame contains genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).
+If the input is an S3 object for class 'scppp', differential expression analysis results will be stored in object scppp under "de_results".
 }
 \description{
-diff_gene_list returns a data frame with differential expression analysis results.
+This function returns a data frame with differential expression analysis results.
 }
 \details{
-This is a function used to find differentially expressed genes.
+This is a function used to find deferentially expressed genes between two clusters.
 }
 \examples{
 

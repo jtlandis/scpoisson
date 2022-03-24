@@ -4,26 +4,51 @@
 \alias{qqplot_env_pois}
 \title{Q-Q plot comparing samples with a theoretical Poisson distribution}
 \usage{
-qqplot_env_pois(sample_data, lambda, envelope_size = 100, ...)
+qqplot_env_pois(
+  sample_data,
+  lambda,
+  L = 10,
+  select_by = "entry",
+  entry_size = 200,
+  envelope_size = 100,
+  ...
+)
 }
 \arguments{
-\item{sample_data}{a numeric vector of sample data points}
+\item{sample_data}{A numeric vector of sample data points or an S3 object for class 'scppp'.}
 
-\item{lambda}{a numeric value for theoretical Poisson parameter}
+\item{lambda}{A numeric value specifying the theoretical Poisson parameter.}
 
-\item{envelope_size}{a numeric value of size of envelope on Q-Q plot (default 100)}
+\item{L}{A numeric value specifying the number of latent vectors included when estimate the Poisson parameter for each matrix entry. This is not useful if a numeric vector is used as input.}
+
+\item{select_by}{A character indicating whether entries should be selected by
+\itemize{
+\item{entry}: {independent matrix entries with Poisson parameter estimates closest to \code{lambda}}
+\item{\code{cell}}: {one particular cell with UMI count mean closest to \code{lambda}}
+\item{\code{gene}}: {one particular gene with UMI count mean closest to \code{lambda}}
+}
+This is not useful if a numeric vector is used as input.}
+
+\item{entry_size}{A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
+This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.}
+
+\item{envelope_size}{A numeric value specifying the size of envelope on Q-Q plot (default 100).}
 }
 \value{
-a ggplot object
+A ggplot object.
 }
 \description{
-qqplot_small_pois returns a Q-Q plot using a more "continuous" approximation of quantiles.
+This function returns a Q-Q plot with envelope using a more "continuous" approximation of quantiles.
 }
 \details{
 This is a function for Q-Q envelope plot used to compare whether given sample data points come from the
 theoretical Poisson distribution.  By simulating repeated samples of the same size from the candidate
 theoretical distribution, and overlaying the envelope on the same figure, it provides a feeling of
 understanding the natural variation from the theoretical distribution.
+
+If an S3 object for class 'scppp' is used as input and the stored result under "data" is a matrix,
+The GLM-PCA algorithm will be applied to estimate the Poisson parameter for each matrix entry.
+Then a specific number of entries will be selected as sample data points to compare with the theoretical Poisson distribution.
 }
 \examples{
 

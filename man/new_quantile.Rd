@@ -2,21 +2,20 @@
 % Please edit documentation in R/qq_env_small.R
 \name{new_quantile}
 \alias{new_quantile}
-\title{A more "continuous" approximation of quantile of samples with a few integer case}
+\title{A more "continuous" approximation of quantiles of samples with a few integer case}
 \usage{
 new_quantile(data, sample)
 }
 \arguments{
-\item{data}{a numeric vector of sampled data points.}
+\item{data}{A numeric vector of sampled data points.}
 
-\item{sample}{a character string denotes which sample data points come from.}
+\item{sample}{A character string denotes which sample data points come from.}
 }
 \value{
-a data frame. First column is the corresponding probability from cumulative distribution function (CDF),
-second column is sample name, and third column is correponsding respective quantiles.
+A data frame contains the corresponding probability from cumulative distribution function (CDF), sample name, and corresponding respective quantiles.
 }
 \description{
-new_quantile returns a data frame including data points and corresponding quantile.
+This function returns a data frame including data points and corresponding quantile.
 }
 \details{
 This is a function developed to get quantile for samples with only a few integer values.
@@ -28,5 +27,6 @@ with height \eqn{P(X = z)}. This is a more "continuous" approximation of quantil
 
 P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
 new_quantile(P, "P")
+
 
 }

@@ -32,6 +32,7 @@ Please install from CRAN ???.
 ```{r install, eval = FALSE}
 #utils::install.packages("scppp")
 library(scpoissonmodel)
+library(magrittr)
 library(purrr)
 ```
 

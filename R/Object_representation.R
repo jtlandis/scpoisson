@@ -1,12 +1,14 @@
 # Object representation
 
-
+#' Generate New scppp object
+#' @param data input data - Usually a matrix of counts
+#' @param sample by rows or columns
 #' @export
 scppp <- function(data, sample = c("rows", "columns"), ...) {
   new_scppp(data, sample)
 }
 
-#' @param data input data - Usually a matrix of counts
+
 #'
 new_scppp <- function(data, sample = c("rows", "columns"), ...) {
   UseMethod("new_scppp")

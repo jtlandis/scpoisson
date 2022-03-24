@@ -1,25 +1,22 @@
-#' A more "continuous" approximation of quantile of samples with a few integer case
+#' A more "continuous" approximation of quantiles of samples with a few integer case
 #'
-#' new_quantile returns a data frame including data points and corresponding quantile.
+#' This function returns a data frame including data points and corresponding quantile.
 #'
 #' This is a function developed to get quantile for samples with only a few integer values.
 #' Define both \eqn{p_{-1} = 0} and \eqn{q_{-1} = 0}.
 #' Replace the point mass at each integer \eqn{z} by a bar on the interval \eqn{[z – \frac{1}{2}, z+ \frac{1}{2}]}
 #' with height \eqn{P(X = z)}. This is a more "continuous" approximation of quantiles in this case.
 #'
-#' @param data a numeric vector of sampled data points.
-#' @param sample a character string denotes which sample data points come from.
+#' @param data A numeric vector of sampled data points.
+#' @param sample A character string denotes which sample data points come from.
 #'
-#' @return a data frame. First column is the corresponding probability from cumulative distribution function (CDF),
-#' second column is sample name, and third column is correponsding respective quantiles.
+#' @return A data frame contains the corresponding probability from cumulative distribution function (CDF), sample name, and corresponding respective quantiles.
 #'
 #' @examples
 #'
 #' P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
 #' new_quantile(P, "P")
 #'
-#' @import dplyr
-#' @import stats
 #'
 new_quantile <- function(data, sample){
 
@@ -29,7 +26,7 @@ new_quantile <- function(data, sample){
 
   dfp <- data.frame(value = data)
   dfp <- dfp %>%
-    do(data.frame(., fval = ecdf(.$value)(.$value)))
+    dplyr::do(data.frame(., fval = ecdf(.$value)(.$value)))
   dfp <- dfp %>% distinct()
   dfp <- dfp[with(dfp, order(fval)),]
   dfp$cat <- sample
@@ -41,7 +38,7 @@ new_quantile <- function(data, sample){
 
 #' Linear interpolation for one sample given reference sample
 #'
-#' interpolate returns a data frame with interpolated data points
+#' This function returns a data frame with interpolated data points.
 #'
 #' This is a function developed to do linear interpolation for corresponding probability
 #' from empirical cumulative distribution function (CDF) and corresponding quanitles.
@@ -50,12 +47,11 @@ new_quantile <- function(data, sample){
 #' do the linear interpolation and insert both CDF values and respective quantiles
 #' to the original object data frame.
 #'
-#' @param df The object data frame need to do interpolation
-#' @param reference The reference data frame to make comparison
-#' @param sample_id A character to denote object data frame
+#' @param df The object data frame requires interpolation.
+#' @param reference The reference data frame to make comparison.
+#' @param sample_id A character to denote the object data frame.
 #'
-#' @return A data frame. First column is CDF, second column is sample name,
-#' and third column is correponsding quantiles.
+#' @return A data frame contains CDF, the sample name, and the corresponding quantiles.
 #'
 #' @examples
 #'
@@ -65,8 +61,6 @@ new_quantile <- function(data, sample){
 #' dfq <- new_quantile(Q, "Q")
 #' df_tq <- interpolate(dfp, dfq, "P")
 #'
-#' @import purrr
-#' @import stats
 #'
 interpolate <- function(df, reference, sample_id){
   list_ <- c(list(df), lapply(1:nrow(reference), function(x) x))
@@ -87,7 +81,7 @@ interpolate <- function(df, reference, sample_id){
 
 #' Paired quantile after interpolation between two samples
 #'
-#' qq_interpolation returns a data frame with paired quantiles in two samples after interpolation.
+#' This function returns a data frame with paired quantiles in two samples after interpolation.
 #'
 #' This is a function for quantile interpolation of two samples.
 #' For each unique quantile value that has original data
@@ -95,15 +89,14 @@ interpolate <- function(df, reference, sample_id){
 #' apply a linear interpolation. So the common quantile values after interpolation
 #' should have unique points the same as unique quantile points from either sample.
 #'
-#' @param dfp a data frame generated from function new_quantile() with first distribution.
-#' @param dfq a data frame generated from function new_quantile() with second distribution.
-#' @param sample1 a character to denote sample name of first distribution.
-#' @param sample2 a character to denote sample name of second distribution.
+#' @param dfp A data frame generated from function new_quantile() based on a specific distribution.
+#' @param dfq Another data frame generated from function new_quantile() based on a specific distribution.
+#' @param sample1 A character to denote sample name of distribution used to generate \code{dfp}.
+#' @param sample2 A character to denote sample name of distribution used to generate \code{dfq}.
 #'
-#' @return a data frame. First column is corresponding probability
-#' from cumulative distribution function (CDF),
-#' second column is corresponding quanitles from the first sample,
-#' and third  column is correponsding quanitles from the second sample.
+#' @return A data frame contains corresponding probability from cumulative distribution function (CDF),
+#' corresponding quanitles from the first sample (\code{dfp}),
+#' and corresponding quanitles from the second sample (\code{dfq}).
 #'
 #' @examples
 #'
@@ -149,17 +142,17 @@ qq_interpolation <- function(dfp, dfq, sample1, sample2){
 
 #' Q-Q plot comparing two samples with small discrete counts
 #'
-#' qqplot_small_test returns a ggplot object visualize quantiles comapring distributions of two samples
+#' This function returns a ggplot object used to visualize quantiles comparing distributions of two samples.
 #'
 #' This is a function for quantile-quantile plot comapring comparing samples from two discrete distributions
 #' after \emph{continuity correction} and linear interpolation
 #'
-#' @param P a numeric vector from one sample
-#' @param Q a numeric vector from the other sample
-#' @param sample1 a character to denote sample name of first distribution.
-#' @param sample2 a character to denote sample name of second distribution.
+#' @param P A numeric vector from one sample.
+#' @param Q A numeric vector from the other sample.
+#' @param sample1 A character to denote sample name of one distribution \code{P} generated from.
+#' @param sample2 A character to denote sample name of the other distribution \code{Q} generated from.
 #'
-#' @return a ggplot object with quantiles from one sample on the horizontal axis and corresponding qunatiles
+#' @return A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding qunatiles
 #' from the other sample on the vertical axis.
 #'
 #' @examples
@@ -183,19 +176,18 @@ qqplot_small_test <- function(P, Q, sample1, sample2){
     coord_fixed(ratio = 1)
 }
 
-#' A more "continuous" approximation of quantile of samples from theoretical Poisson distribution.
+#' A more "continuous" approximation of quantiles from the theoretical Poisson distribution.
 #'
-#' new_quantile_pois returns a data frame including the probability
+#' This function returns a data frame including the probability
 #' from cumulative distribution function (CDF) and corresponding quantiles.
 #'
 #' This is a function developed to get corresponding quantiles from theoretical Poisson distribution.
-#' The data points ranges from 0 to maximum value of sampled data used to compare with theoretical Poisson.
+#' The data points ranges from 0 to maximum value of sampled data used to compare with the theoretical Poisson distribution.
 #'
-#' @param data a numeric vector of sampled data points to comapre with theoretical Poisson.
-#' @param lambda a numeric value for theoretical Poisson distribution parameter (equal to mean).
+#' @param data A numeric vector of sampled data points to compare with theoretical Poisson.
+#' @param lambda A numeric value for theoretical Poisson distribution parameter (equal to mean).
 #'
-#' @return a data frame. First column is quantile, second column is "theoretical",
-#' and third column is correponsding quantiles from sample data.
+#' @return A data frame contains CDF probability and corresponding quantiles from the theoretical Poisson distribution.
 #'
 #' @examples
 #'
@@ -209,7 +201,7 @@ new_quantile_pois <- function(data, lambda){
   }
 
   if(min(data < 0)){
-    warning("Poisson random number is non negative")
+    warning("Poisson random number should be non negative")
   }
 
   dfp <- new_quantile(data, "sample")
@@ -224,19 +216,18 @@ new_quantile_pois <- function(data, lambda){
 
 #' Random sample generation function to generate sets of samples from theoretical Poisson distribution.
 #'
-#' nboot_small returns a data frame with generate sets of samples and simulation index.
+#' This function returns a data frame with generated sets of samples and simulation index.
 #'
 #' This is a function used to simulate a given number sets of samples from a theoretical Poisson distribution
 #' that match input samples on sample size and sample mean (or theoretical Poisson parameter).
 #' Plotting these as envelopes in Q-Q plot shows the variability in shapes we can expect when
 #' sampling from the theoretical Poisson distribution.
 #'
-#' @param x a numeric vector of sampled data points to comapre with theoretical Poisson.
-#' @param lambda a numeric value for mean of theoretical Poisson.
-#' @param R a numeric value for mean of theoretical Poisson.
+#' @param x A numeric vector of sampled data points to compare with theoretical Poisson.
+#' @param lambda A numeric value specifying mean for theoretical Poisson distribution.
+#' @param R A numeric value specifying the number of simulated sets.
 #'
-#' @return a numeric vector of number of simulation sets that match input samples on sample size
-#' and sample mean (or theoretical Poisson parameter).
+#' @return A data frame contains simulated data and corresponding simulation index.
 #'
 #' @examples
 #' nboot_small(rpois(100, 3), 3, 200)
@@ -246,25 +237,39 @@ nboot_small <- function(x, lambda, R) {
   do.call(rbind,
           lapply(1 : R,
                  function(i) {
-                   xx <- sort(rpois(n, lambda))
-                   data.frame(value = xx, sim = i)
+                   y <- sort(rpois(n, lambda))
+                   data.frame(value = y, sim = i)
                  }))
 }
 
 #' Q-Q plot comparing samples with a theoretical Poisson distribution
 #'
-#' qqplot_small_pois returns a Q-Q plot using a more "continuous" approximation of quantiles.
+#' This function returns a Q-Q plot with envelope using a more "continuous" approximation of quantiles.
 #'
 #' This is a function for Q-Q envelope plot used to compare whether given sample data points come from the
 #' theoretical Poisson distribution.  By simulating repeated samples of the same size from the candidate
 #' theoretical distribution, and overlaying the envelope on the same figure, it provides a feeling of
 #' understanding the natural variation from the theoretical distribution.
 #'
-#' @param sample_data a numeric vector of sample data points
-#' @param lambda a numeric value for theoretical Poisson parameter
-#' @param envelope_size a numeric value of size of envelope on Q-Q plot (default 100)
+#' If an S3 object for class 'scppp' is used as input and the stored result under "data" is a matrix,
+#' The GLM-PCA algorithm will be applied to estimate the Poisson parameter for each matrix entry.
+#' Then a specific number of entries will be selected as sample data points to compare with the theoretical Poisson distribution.
 #'
-#' @return a ggplot object
+#' @param sample_data A numeric vector of sample data points or an S3 object for class 'scppp'.
+#' @param lambda A numeric value specifying the theoretical Poisson parameter.
+#' @param L A numeric value specifying the number of latent vectors included when estimate the Poisson parameter for each matrix entry. This is not useful if a numeric vector is used as input.
+#' @param select_by A character indicating whether entries should be selected by
+#' \itemize{
+#' \item{entry}: {independent matrix entries with Poisson parameter estimates closest to \code{lambda}}
+#' \item{\code{cell}}: {one particular cell with UMI count mean closest to \code{lambda}}
+#' \item{\code{gene}}: {one particular gene with UMI count mean closest to \code{lambda}}
+#' }
+#' This is not useful if a numeric vector is used as input.
+#' @param entry_size A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
+#' This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.
+#' @param envelope_size A numeric value specifying the size of envelope on Q-Q plot (default 100).
+#'
+#' @return A ggplot object.
 #'
 #' @examples
 #'
@@ -273,7 +278,9 @@ nboot_small <- function(x, lambda, R) {
 #' @import ggplot2
 #'
 #' @export
-qqplot_env_pois <- function(sample_data, lambda, envelope_size = 100, ...) {
+qqplot_env_pois <- function(sample_data, lambda, L = 10,
+                            select_by = "entry",
+                            entry_size = 200, envelope_size = 100, ...) {
   UseMethod("qqplot_env_pois")
 }
 
@@ -323,58 +330,6 @@ qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100){
   return(p)
 }
 
-select_data <- function(test_dat, Gfit_dat, lambda,
-                        select_by = "entry", entry_size = 200){
-
-  if(select_by == "entry"){
-    test_raw <- as.vector(test_dat)
-    fitdata <- as.vector(Gfit_dat)
-    order <- order(abs(fitdata - lambda), decreasing = F)
-    test_raw <- test_raw[order]
-    return(test_raw[1:entry_size])
-  }
-
-  if(select_by == "cell"){
-    cell_mean <- rowMeans(test_dat)
-    measure <- abs(cell_mean - lambda)
-    index <- which(measure == min(measure))
-
-    cell <- rownames(test_dat)[index]
-    cell_sd <- rowSds(test_dat)[index]
-    select_cell <- cell[which(cell_sd == max(cell_sd))]
-    return(test_dat[which(rownames(test_dat) == select_cell[1]), ])
-  }
-
-  if(select_by == "gene"){
-    gene_mean <- colMeans(test_dat)
-    measure <- abs(gene_mean - lambda)
-    index <- which(measure == min(measure))
-
-    gene <- colnames(test_dat)[index]
-    gene_sd <- colSds(test_dat)[index]
-    select_gene <- gene[which(gene_sd == max(gene_sd))]
-    return(test_dat[, which(colnames(test_dat) == select_gene[1])])
-  }
-
-}
-
-apply_glmpca <- function(rawdata, L = 10){
-
-  set.seed(1234)
-  test_df <- t(rawdata)
-  test_df <- test_df[which(rowSums(test_df) > 0), ]
-  ctl <- list(maxIter=500,eps=1e-4)
-  res <- glmpca::glmpca(test_df, L=L, fam = "poi", sz=colSums(test_df),verbose=TRUE,ctl=ctl)
-  factors <- res$factors
-
-  U <- as.matrix(res$factors)
-  V <- as.matrix(res$loadings)
-  Ni <- colSums(test_df)
-  Vj <- as.vector(as.matrix(res$coefX))
-  Gfit_dat <- exp(t(t(U %*% t(V)) + Vj) + log(Ni))
-  return((Gfit_dat))
-}
-
 #' @export
 qqplot_env_pois.scppp <- function(scppp_obj, lambda,
                                   L = 10,
@@ -385,6 +340,59 @@ qqplot_env_pois.scppp <- function(scppp_obj, lambda,
     qqplot_env_pois.numeric(test_data, lambda, envelope_size)
   }
   else {
+
+    select_data <- function(test_dat, Gfit_dat, lambda,
+                            select_by = "entry", entry_size = 200){
+
+      if(select_by == "entry"){
+        test_raw <- as.vector(test_dat)
+        fitdata <- as.vector(Gfit_dat)
+        order <- order(abs(fitdata - lambda), decreasing = F)
+        test_raw <- test_raw[order]
+        return(test_raw[1:entry_size])
+      }
+
+      if(select_by == "cell"){
+        cell_mean <- rowMeans(test_dat)
+        measure <- abs(cell_mean - lambda)
+        index <- which(measure == min(measure))
+
+        cell <- rownames(test_dat)[index]
+        cell_sd <- rowSds(test_dat)[index]
+        select_cell <- cell[which(cell_sd == max(cell_sd))]
+        return(test_dat[which(rownames(test_dat) == select_cell[1]), ])
+      }
+
+      if(select_by == "gene"){
+        gene_mean <- colMeans(test_dat)
+        measure <- abs(gene_mean - lambda)
+        index <- which(measure == min(measure))
+
+        gene <- colnames(test_dat)[index]
+        gene_sd <- colSds(test_dat)[index]
+        select_gene <- gene[which(gene_sd == max(gene_sd))]
+        return(test_dat[, which(colnames(test_dat) == select_gene[1])])
+      }
+
+    }
+
+    apply_glmpca <- function(rawdata, L = 10){
+
+      set.seed(1234)
+      test_df <- t(rawdata)
+      test_df <- test_df[which(rowSums(test_df) > 0), ]
+      ctl <- list(maxIter=500,eps=1e-4)
+      res <- glmpca::glmpca(test_df, L=L, fam = "poi", sz=colSums(test_df),verbose=TRUE,ctl=ctl)
+      factors <- res$factors
+
+      U <- as.matrix(res$factors)
+      V <- as.matrix(res$loadings)
+      Ni <- colSums(test_df)
+      Vj <- as.vector(as.matrix(res$coefX))
+      Gfit_dat <- exp(t(t(U %*% t(V)) + Vj) + log(Ni))
+      return((Gfit_dat))
+    }
+
     test <- as.matrix(test_data)
     Gfit_dat <- apply_glmpca(test_data, L)
     sample_data <- select_data(test_data, Gfit_dat, lambda, select_by, entry_size)

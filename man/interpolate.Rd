@@ -7,18 +7,17 @@
 interpolate(df, reference, sample_id)
 }
 \arguments{
-\item{df}{The object data frame need to do interpolation}
+\item{df}{The object data frame requires interpolation.}
 
-\item{reference}{The reference data frame to make comparison}
+\item{reference}{The reference data frame to make comparison.}
 
-\item{sample_id}{A character to denote object data frame}
+\item{sample_id}{A character to denote the object data frame.}
 }
 \value{
-A data frame. First column is CDF, second column is sample name,
-and third column is correponsding quantiles.
+A data frame contains CDF, the sample name, and the corresponding quantiles.
 }
 \description{
-interpolate returns a data frame with interpolated data points
+This function returns a data frame with interpolated data points.
 }
 \details{
 This is a function developed to do linear interpolation for corresponding probability
@@ -35,5 +34,6 @@ Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
 dfp <- new_quantile(P, "P")
 dfq <- new_quantile(Q, "Q")
 df_tq <- interpolate(dfp, dfq, "P")
+
 
 }

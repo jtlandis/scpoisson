@@ -1,21 +1,20 @@
 #' Differential expression analysis
 #'
-#' diff_gene_list returns a data frame with differential expression analysis results.
+#' This function returns a data frame with differential expression analysis results.
 #'
-#' This is a function used to find differentially expressed genes.
+#' This is a function used to find deferentially expressed genes between two clusters.
 #'
-#' @param data A departure matrix generated from adj_CDF_logit().
-#' @param final_clust_res A data frame with clustering results generated from HclustDepart(). It contains two columns: names (cell names) and clusters (corresponding cluster label).
+#' @param data A departure matrix generated from adj_CDF_logit() or an S3 object for class 'scppp'.
+#' @param final_clust_res A data frame with clustering results generated from HclustDepart(). It contains two columns: names (cell names) and clusters (cluster label).
 #' @param clust1 One of the cluster label used to make comparison, default "1".
 #' @param clust2 The other cluster label used to make comparison, default "2".
-#' @param t A logical value indicating whether the t-test should be used to make comparison. In general, for large cluster (\eqn{n \geq 30}), the t-test should be used. Otherwise, the Wilcoxon test might be more appropriate.
+#' @param t A logical value indicating whether the t-test should be used to make comparison. In general, for large cluster (\eqn{n \ge 30}), the t-test should be used. Otherwise, the Wilcoxon test might be more appropriate.
 #'
-#' @return A data frame contains a list of genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).
+#' @return A data frame contains genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).
+#' If the input is an S3 object for class 'scppp', differential expression analysis results will be stored in object scppp under "de_results".
 #'
 #' @examples
 #'
-#'
-#' @import purrr
 #'
 #' @export
 diff_gene_list <- function(data, test_dat2, final_clust_res = NULL,
@@ -23,10 +22,11 @@ diff_gene_list <- function(data, test_dat2, final_clust_res = NULL,
                            t = F, ...) UseMethod("diff_gene_list")
 
 #' @export
-#' @retuns scppp
+#' @return scppp
 diff_gene_list.scppp <- function(data, final_clust_res = NULL,
                                  clust1 = "1", clust2 = "2",
                                  t = F) {
+  stopifnot('Require a clustering result, run HclustDepart() first' = "clust_results" %in% attributes(data)$names)
   final_clust_res <- data[["clust_results"]]$Hclust[[1]]
   stopifnot('Clust1 not match the cluster label from HclustDepart' = clust1 %in% final_clust_res$cluster)
   stopifnot('Clust2 not match the cluster label from HclustDepart' = clust2 %in% final_clust_res$cluster)
@@ -39,7 +39,7 @@ diff_gene_list.scppp <- function(data, final_clust_res = NULL,
 
 #' Use departure matrix from the first step (input should be the departure matrix by running adj_CDF_logit)
 #' @export
-#' @returns scppp_de_results
+#' @return scppp_de_results
 diff_gene_list.matrix <- function(data, final_clust_res,
                            clust1 = "1", clust2 = "2",
                            t = F){
@@ -94,7 +94,7 @@ diff_gene_list.matrix <- function(data, final_clust_res,
   fc_df_wide$FC <- fc_df_wide$A.x / fc_df_wide$B.x
   fc_df_wide$padj <- p.adjust(fc_df_wide$p.value, "fdr")
   fc_df_wide <- fc_df_wide %>%
-    rename(clust1_mean = "A.x",
+    dplyr::rename(clust1_mean = "A.x",
            clust2_mean = "B.x",
            clust1_n = "A.y",
            clust2_n = "B.y")
@@ -107,7 +107,7 @@ diff_gene_list.matrix <- function(data, final_clust_res,
 
 #' Update departure matrix based on clusters used for comparison (input should be the raw UMI count matrix)
 #' @export
-#' @returns scppp_de_results
+#' @return scppp_de_results
 diff_gene_list.matrix2 <- function(data, final_clust_res,
                                   clust1 = "1", clust2 = "2",
                                   t = F){
@@ -165,7 +165,7 @@ diff_gene_list.matrix2 <- function(data, final_clust_res,
   fc_df_wide$FC <- fc_df_wide$A.x / fc_df_wide$B.x
   fc_df_wide$padj <- p.adjust(fc_df_wide$p.value, "fdr")
   fc_df_wide <- fc_df_wide %>%
-    rename(clust1_mean = "A.x",
+    dplyr::rename(clust1_mean = "A.x",
            clust2_mean = "B.x",
            clust1_n = "A.y",
            clust2_n = "B.y")

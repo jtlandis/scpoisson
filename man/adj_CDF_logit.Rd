@@ -7,24 +7,26 @@
 adj_CDF_logit(data, change = 1e-10, ...)
 }
 \arguments{
-\item{change}{a numeric value used to correct for exactly 0 and 1 before logit transformation.
-Any values below \code{change} are set to be \code{change} and
-any values above \eqn{1- \code{change}} are set to be \eqn{1- \code{change}}.}
+\item{data}{A UMI count data matrix with cells as rows and genes as columns or an S3 object for class 'scppp'.}
 
-\item{dat}{a UMI count data matirx with cells as rows and genes as columns}
+\item{change}{A numeric value used to correct for exactly 0 and 1 before logit transformation.
+Any values below \code{change} are set to be \code{change} and
+any values above \eqn{1- change} are set to be \eqn{1- change}.}
 }
 \value{
-a matrix of departure as a novel data representation.
+A matrix of departure as a novel data representation (matrix as input) or an S3 object for class 'scppp' (scppp object as input; departure result will be stored in object scppp under "representation").
 }
 \description{
-adj_CDF_logit returns a matrix of novel data representation with the same dimension as input data matrix.
+This function returns a matrix of a novel data representation with the same dimension as input data matrix.
 }
 \details{
-This is a function used to calcualte model departure as a novel data representation.
+This is a function used to calculate model departure as a novel data representation.
 }
 \examples{
-
+# Matrix as input
 test_set <- matrix(rpois(500, 0.5), nrow = 10)
-para_est_new(test_set)
+adj_CDF_logit(test_set)
+# scppp object as input
+adj_CDF_logit(scppp(test_set))
 
 }

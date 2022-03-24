@@ -7,12 +7,14 @@
 sigp(test_dat, minSize = 10, sim = 100)
 }
 \arguments{
-\item{test_dat}{a UMI count data matirx with cells as rows and genes as columns}
+\item{test_dat}{A UMI count data matrix with cells as rows and genes as columns.}
 
-\item{minSize}{the minimal allowable cluster size (default 10)}
+\item{minSize}{A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).}
+
+\item{sim}{A numeric value specifying the number of simulations during the Monte Carlo simulation procedure (default 100).}
 }
 \value{
-a list with the following elements:
+A list with the following elements:
 \itemize{
 \item{\code{p}}: {p-value for the first split}
 \item{\code{z}}: {z-score for the first split}
@@ -22,11 +24,11 @@ a list with the following elements:
 }
 }
 \description{
-sigp returns a list with elements mainly generated from sigclust2
+This function returns a list with elements mainly generated from sigclust2.
 }
 \details{
 This is a function used to calculate the significance level of the first split from hierarchical clustering
-based on euclidean distance and Ward's linkage
+based on euclidean distance and Ward's linkage.
 }
 \examples{
 

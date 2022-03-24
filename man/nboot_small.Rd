@@ -7,18 +7,17 @@
 nboot_small(x, lambda, R)
 }
 \arguments{
-\item{x}{a numeric vector of sampled data points to comapre with theoretical Poisson.}
+\item{x}{A numeric vector of sampled data points to compare with theoretical Poisson.}
 
-\item{lambda}{a numeric value for mean of theoretical Poisson.}
+\item{lambda}{A numeric value specifying mean for theoretical Poisson distribution.}
 
-\item{R}{a numeric value for mean of theoretical Poisson.}
+\item{R}{A numeric value specifying the number of simulated sets.}
 }
 \value{
-a numeric vector of number of simulation sets that match input samples on sample size
-and sample mean (or theoretical Poisson parameter).
+A data frame contains simulated data and corresponding simulation index.
 }
 \description{
-nboot_small returns a data frame with generate sets of samples and simulation index.
+This function returns a data frame with generated sets of samples and simulation index.
 }
 \details{
 This is a function used to simulate a given number sets of samples from a theoretical Poisson distribution

@@ -2,26 +2,25 @@
 % Please edit documentation in R/qq_env_small.R
 \name{new_quantile_pois}
 \alias{new_quantile_pois}
-\title{A more "continuous" approximation of quantile of samples from theoretical Poisson distribution.}
+\title{A more "continuous" approximation of quantiles from the theoretical Poisson distribution.}
 \usage{
 new_quantile_pois(data, lambda)
 }
 \arguments{
-\item{data}{a numeric vector of sampled data points to comapre with theoretical Poisson.}
+\item{data}{A numeric vector of sampled data points to compare with theoretical Poisson.}
 
-\item{lambda}{a numeric value for theoretical Poisson distribution parameter (equal to mean).}
+\item{lambda}{A numeric value for theoretical Poisson distribution parameter (equal to mean).}
 }
 \value{
-a data frame. First column is quantile, second column is "theoretical",
-and third column is correponsding quantiles from sample data.
+A data frame contains CDF probability and corresponding quantiles from the theoretical Poisson distribution.
 }
 \description{
-new_quantile_pois returns a data frame including the probability
+This function returns a data frame including the probability
 from cumulative distribution function (CDF) and corresponding quantiles.
 }
 \details{
 This is a function developed to get corresponding quantiles from theoretical Poisson distribution.
-The data points ranges from 0 to maximum value of sampled data used to compare with theoretical Poisson.
+The data points ranges from 0 to maximum value of sampled data used to compare with the theoretical Poisson distribution.
 }
 \examples{
 

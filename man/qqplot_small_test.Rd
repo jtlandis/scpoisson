@@ -7,20 +7,20 @@
 qqplot_small_test(P, Q, sample1, sample2)
 }
 \arguments{
-\item{P}{a numeric vector from one sample}
+\item{P}{A numeric vector from one sample.}
 
-\item{Q}{a numeric vector from the other sample}
+\item{Q}{A numeric vector from the other sample.}
 
-\item{sample1}{a character to denote sample name of first distribution.}
+\item{sample1}{A character to denote sample name of one distribution \code{P} generated from.}
 
-\item{sample2}{a character to denote sample name of second distribution.}
+\item{sample2}{A character to denote sample name of the other distribution \code{Q} generated from.}
 }
 \value{
-a ggplot object with quantiles from one sample on the horizontal axis and corresponding qunatiles
+A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding qunatiles
 from the other sample on the vertical axis.
 }
 \description{
-qqplot_small_test returns a ggplot object visualize quantiles comapring distributions of two samples
+This function returns a ggplot object used to visualize quantiles comparing distributions of two samples.
 }
 \details{
 This is a function for quantile-quantile plot comapring comparing samples from two discrete distributions

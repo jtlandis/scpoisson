@@ -7,22 +7,21 @@
 qq_interpolation(dfp, dfq, sample1, sample2)
 }
 \arguments{
-\item{dfp}{a data frame generated from function new_quantile() with first distribution.}
+\item{dfp}{A data frame generated from function new_quantile() based on a specific distribution.}
 
-\item{dfq}{a data frame generated from function new_quantile() with second distribution.}
+\item{dfq}{Another data frame generated from function new_quantile() based on a specific distribution.}
 
-\item{sample1}{a character to denote sample name of first distribution.}
+\item{sample1}{A character to denote sample name of distribution used to generate \code{dfp}.}
 
-\item{sample2}{a character to denote sample name of second distribution.}
+\item{sample2}{A character to denote sample name of distribution used to generate \code{dfq}.}
 }
 \value{
-a data frame. First column is corresponding probability
-from cumulative distribution function (CDF),
-second column is corresponding quanitles from the first sample,
-and third  column is correponsding quanitles from the second sample.
+A data frame contains corresponding probability from cumulative distribution function (CDF),
+corresponding quanitles from the first sample (\code{dfp}),
+and corresponding quanitles from the second sample (\code{dfq}).
 }
 \description{
-qq_interpolation returns a data frame with paired quantiles in two samples after interpolation.
+This function returns a data frame with paired quantiles in two samples after interpolation.
 }
 \details{
 This is a function for quantile interpolation of two samples.

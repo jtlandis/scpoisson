@@ -1,23 +1,25 @@
 #' Louvain clustering using departure as data representation
 #'
-#' logit_Seurat_clustering returns a list with elements useful to check and compare cell clustering
+#' This function returns a list with elements useful to check and compare cell clustering.
 #'
-#' This is a function used to get cell clustering using Louvain clustering implemented in Seurat package
+#' This is a function used to get cell clustering using Louvain clustering algorithm implemented in the Seurat package.
 #'
-#' @param test_set a UMI count data frame or matirx with cells as rows and genes as columns
-#' @param pdat a matrix representated by model departure for each entry
-#' @param PCA whether apply PCA before Louvain clustering, default is \code{TRUE}
-#' @param N the number of pricipal components included for further clustering, default = 15
-#' @param pres the resolution parameter in Louvain clustering, default = 0.8
+#' @param data A UMI count matirx with cells as rows and genes as columns or an S3 object for class 'scppp'.
+#' @param pdat A matrix used as input for cell clustering. If not specify, the departure matrix will be calculated within the function.
+#' @param PCA A logic value specifying whether apply PCA before Louvain clustering, default is \code{TRUE}.
+#' @param N A numeric value specifying the number of principal components included for further clustering (default 15).
+#' @param pres A numeric value specifying the resolution parameter in Louvain clustering (default 0.8)
+#' @param tsne A logic value specifying whether t-SNE dimension reduction should be applied for visualization.
+#' @param umap A logic value specifying whether UMAP dimension reduction should be applied for visualization.
 #'
-#' @return a list with the following elements:
+#' @return A list with the following elements:
 #' \itemize{
 #' \item{\code{sdata}}: {a Seurat object}
-#' \item{\code{tsne_data}}: {a matrix containing t-SNE dimensionality reduction results,
-#' with cells as rows, and first two t-SNE dimension as columns}
-#' \item{\code{umap_data}}: {a matrix containing UMAP dimensionality reduction results,
-#' with cells as rows, and first two UMAP dimension as columns}
-#' \item{\code{sdata$seurat_clusters}}: {a vector with clustering index for each cell}
+#' \item{\code{tsne_data}}: {a matrix containing t-SNE dimension reduction results,
+#' with cells as rows, and first two t-SNE dimensions as columns; NULL if \code{tsne = FLASE}.}
+#' \item{\code{umap_data}}: {a matrix containing UMAP dimension reduction results,
+#' with cells as rows, and first two UMAP dimensions as columns; NULL if \code{tsne = FLASE}.}
+#' \item{\code{res_clust}}: {a data frame contains two columns: names (cell names) and clusters (cluster label)}
 #' }
 #'
 #' @examples
@@ -36,8 +38,7 @@ LouvainDepart <- function(data, pdat = NULL, PCA = T,
                           N = 15, pres = 0.8,
                           tsne = F, umap = F, ...) UseMethod("LouvainDepart")
 #' @export
-#' @retuns scppp
-
+#' @return scppp
 LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
                                      N = 15, pres = 0.8,
                                      tsne = F, umap = F){
@@ -50,14 +51,13 @@ LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
   return(data)
 }
 #' @export
-#' @returns scppp_hclust_results
-
+#' @return scppp_Lclust_results
 LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
                           N = 15, pres = 0.8,
                           tsne = F, umap = F){
 
   test_set <- data
-  stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
+  stopifnot('Require a matrix' = is.matrix(test_set))
   sdat <- as(as.matrix(t(test_set)), "dgCMatrix")
   sdata <- Seurat::CreateSeuratObject(counts = sdat)
   if(is.null(pdat)){
