@@ -55,3 +55,6 @@ Then a specific number of entries will be selected as sample data points to comp
 qqplot_env_pois(rpois(200, 3), 3, 100)
 
 }
+\references{
+\insertRef{glmpca}{scpoissonmodel}
+}

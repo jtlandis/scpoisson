@@ -29,6 +29,8 @@ Imports:
     dplyr,
     tidyr,
     purrr,
-    Matrix
+    Matrix,
+    Rdpack 
+RdMacros: Rdpack
 Remotes: 
   nolanlab/Rclusterpp

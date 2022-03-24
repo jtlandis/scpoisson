@@ -271,6 +271,9 @@ nboot_small <- function(x, lambda, R) {
 #'
 #' @return A ggplot object.
 #'
+#' @references
+#' \insertRef{glmpca}{scpoissonmodel}
+#'
 #' @examples
 #'
 #' qqplot_env_pois(rpois(200, 3), 3, 100)

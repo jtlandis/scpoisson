@@ -28,9 +28,7 @@
 #' logit_Seurat_clustering(test_set)
 #'
 #' @references
-#' \itemize{
-#'     \item Stuart, T. et al. Comprehensive integration of single-cell data. Cell 177, 1888 (2019)
-#' }
+#' \insertRef{Seurat}{scpoissonmodel}
 #'
 #'
 #' @export
