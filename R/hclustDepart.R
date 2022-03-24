@@ -27,6 +27,8 @@
 #' \itemize{
 #'     \item Kimes, P. K., Liu, Y., Hayes, D. N. & Marron, J. S. Statistical Significance for Hierarchical
 #'     Clustering. Biometrics 73, 811–821 (2017).
+#'     \item Michael Linderman (2019). Rclusterpp: Linkable C++ Clustering. R package version 0.2.5.
+#'     https://github.com/nolanlab/Rclusterpp
 #' }
 #'
 #'

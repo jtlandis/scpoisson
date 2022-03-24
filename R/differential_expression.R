@@ -51,7 +51,9 @@ diff_gene_list.matrix <- function(data, final_clust_res,
   test_dat2 <- test_dat2[which(rownames(test_dat2) %in% cell_in),]
 
   dat_long3 <- data.frame(names = rownames(test_dat2), test_dat2)
-  dat_long3 <- reshape2::melt(dat_long3, id.vars=c("names"))
+  #dat_long3 <- reshape2::melt(dat_long3, id.vars=c("names"))
+  dat_long3 <- dat_long3 %>%
+    tidyr::gather(variable, value, -names)
   dat_long3 <- merge(dat_long3, final_clust_res, by = "names")
   dat_long3$clust_test <- ifelse(dat_long3$cluster %in% clust1, "A", "B")
 
@@ -60,7 +62,9 @@ diff_gene_list.matrix <- function(data, final_clust_res,
     dplyr::summarize(Mean = mean(value, na.rm=TRUE))
 
 
-  fc_df_wide <- reshape2::dcast(fc_df2,  variable ~ clust_test, value.var="Mean")
+  #fc_df_wide <- reshape2::dcast(fc_df2,  variable ~ clust_test, value.var="Mean")
+  fc_df_wide <- fc_df2 %>%
+    tidyr::spread(key = clust_test, value = Mean)
   fc_df_wide$mean_diff <- fc_df_wide$A - fc_df_wide$B
 
   if(!t){
@@ -122,7 +126,8 @@ diff_gene_list.matrix2 <- function(data, final_clust_res,
   test_dat2 <- adj_CDF_logit(data)
 
   dat_long3 <- data.frame(names = rownames(test_dat2), test_dat2)
-  dat_long3 <- reshape2::melt(dat_long3, id.vars=c("names"))
+  dat_long3 <- dat_long3 %>%
+    tidyr::gather(variable, value, -names)
   dat_long3 <- merge(dat_long3, final_clust_res, by = "names")
   dat_long3$clust_test <- ifelse(dat_long3$cluster %in% clust1, "A", "B")
 
@@ -131,7 +136,9 @@ diff_gene_list.matrix2 <- function(data, final_clust_res,
     dplyr::summarize(Mean = mean(value, na.rm=TRUE))
 
 
-  fc_df_wide <- reshape2::dcast(fc_df2,  variable ~ clust_test, value.var="Mean")
+  #fc_df_wide <- reshape2::dcast(fc_df2,  variable ~ clust_test, value.var="Mean")
+  fc_df_wide <- fc_df2 %>%
+    tidyr::spread(key = clust_test, value = Mean)
   fc_df_wide$mean_diff <- fc_df_wide$A - fc_df_wide$B
 
   if(!t){

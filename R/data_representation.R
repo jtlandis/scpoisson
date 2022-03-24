@@ -56,6 +56,13 @@ para_est_new <- function(test_set){
 #' # scppp object as input
 #' adj_CDF_logit(scppp(test_set))
 #'
+#' @references
+#' \itemize{
+#'     \item F. William Townes and Kelly Street (2020). glmpca: Dimension Reduction of
+#'     Non-Normally Distributed Data. R package version 0.2.0.
+#'     https://CRAN.R-project.org/package=glmpca
+#' }
+#'
 #' @export
 adj_CDF_logit <- function(data, change = 1e-10, ...) UseMethod("adj_CDF_logit")
 

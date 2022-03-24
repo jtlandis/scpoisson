@@ -23,14 +23,14 @@ output: github_document
 
 ## Overview
 
-The R package scppp is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on departure as a novel data representation.
+The R package scpoissonmodel is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on departure as a novel data representation.
 
 ## Installation
 
 Please install from CRAN ???.
 
 ```{r install, eval = FALSE}
-#utils::install.packages("scppp")
+#utils::install.packages("scpoissonmodel")
 library(scpoissonmodel)
 library(magrittr)
 library(purrr)
