@@ -30,3 +30,10 @@ adj_CDF_logit(test_set)
 adj_CDF_logit(scppp(test_set))
 
 }
+\references{
+\itemize{
+\item F. William Townes and Kelly Street (2020). glmpca: Dimension Reduction of
+Non-Normally Distributed Data. R package version 0.2.0.
+https://CRAN.R-project.org/package=glmpca
+}
+}
