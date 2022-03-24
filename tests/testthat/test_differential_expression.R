@@ -16,6 +16,8 @@ scppp_obj <- adj_CDF_logit(scppp_obj)
 
 
 test_that("differential_expression works as expected", {
+  # require clustering results
+  expect_error(diff_gene_list(scppp(t(counts))))
   # cluster label should match the ones from clustering results
   expect_error(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2-1", t = F))
   scppp_obj <- suppressWarnings(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t = F))
