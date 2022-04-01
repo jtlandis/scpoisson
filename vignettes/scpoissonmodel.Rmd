@@ -1,0 +1,91 @@
+---
+title: "A new Poisson probability paradigm for single cell RNA-seq clustering"
+date: "`r Sys.Date()`"
+author: "Yue Pan"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+vignette: |
+  %\VignetteIndexEntry{A new Poisson probability paradigm for single cell RNA-seq clustering}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+This package is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on departure as a novel data representation. 
+
+In the following sections, we introduce the approach for assessment of the validity of the independent Poisson statistical framework using Q-Q envelope plots. The code here is specific for validation of independent Poisson distributions of scRNA-seq data matrix entries, but such idea can be applied to different types of data under different assumptions of distributions.
+
+Then we propose using model departure as a novel data representation, which is a measurement of relative location of that UMI count with respect to the independent Poisson distribution at the individual entry level. A departure-based cell clustering algorithm is developed to identify cell subpopulations.
+
+# Installing
+
+```{r setup}
+library(scpoissonmodel)
+library(here)
+library(dplyr)
+library(ggplot2)
+```
+
+# Poissoneity of scRNA-seq data
+
+ScRNA-seq data contains a large number of zeros, which makes the simple multiplication ineffective because zeros are not appropriately scaled by multiplication, motivating new statistical approaches. Here, we propose a different, assumption-free approach. Instead of focusing on gene averages and normalized and scaled data, we prioritize the individual UMI matrix entries. This approach is based on an independent Poisson statistical framework, where each RNA measurements for each cell comes from its own independent Poisson distribution. 
+
+In the following example, we show how to visualize the Poissoneity of scRNA-seq data by Q-Q envelope plots. The envelopes are generated from theoretical distribution, which provide a quantitative way measuring deviation from the diagonal line. If the theoretical distribution fits the data well, the curve should be located around the diagonal line and within the envelope. 
+
+The GLM-PCA algorithm is applied for parameter estimation. Then some matrix entries (default 200) will be selected as sample data and compare with the theoretical Poisson distribution. Here we take $L=10$ since that is shown to be an appropriate number of latent vectors in one of our plate-based scRNA-seq data set. In practice, we suggest try a range of $L$ and this number can be different for different data sets. As long as there exists such an $L$, which gives reasonable fit under the Poisson statistical framework, that demonstrates the "Poissoneity" of such data set.
+
+The code here is specific for validation of independent Poisson distributions based on UMI scRNA-seq data, but such idea can be applied to different types of data under different assumptions of distributions.
+
+```{r poissoneity, message = F}
+# UMI count matrix
+test_dat <- as.data.frame(readRDS(here("data/p5.rda")))
+scppp_obj <- scppp(test_dat)
+
+# Q-Q envelope plot
+qqplot_env_pois(scppp_obj, L = 10, lambda = 5) 
+
+```
+
+
+# Cell clustering based on model departure
+
+A major application of this concept "Poissoneity" is clustering using a model departure as data representation. 
+
+The initial step is based on a crude two-way parameter approximation, where variation across cells is modeled by cell level parameters, and variation across genes is modeled by gene level parameters. This initial step in itself does not appropriately account for cell heterogeneity (different cell types). In the next step such interesting structure is captured by departures from the naive two-way approximation and the original count matrix is replaced by a Poisson departure matrix. In the departure matrix, each entry is quantified by the relative location of that original count with respect to the tentative Poisson distribution, whose parameter comes from the initial two-way approximation. The departure measure is captured by a Cumulative Distribution Function (CDF), which leaves the unexpectedly small counts nearly 0 and unusually large counts close to 1. Next, the departure measure is put on a more statistically amenable scale using the logit function. As a result unexpectedly large counts give large positive values and unexpectedly small counts give large negative values. This departure matrix forms the input for cell clustering as a downstream analysis.
+
+The following example shows how to run our clustering pipeline using a model departure as data representation. In this simple case, set number of simulations $sim = 100$ is enough to separate the two known cell lines. For more complicated data, we suggest set the number of simulations to 500 or 1000 for more reliable clustering results.
+
+The clustering results are stored in object scppp under "clust_results". You can refer to "Hclust" under that for more details.
+
+```{r clustering, warning=FALSE}
+# UMI count matrix
+test_dat <- as.data.frame(readRDS(here("data/p56.rda")))
+scppp_obj <- scppp(test_dat)
+
+scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3)
+
+# cluster label for each cell
+clust_res <- scppp_obj[["clust_results"]]$Hclust[[1]]
+head(clust_res)
+table(clust_res[,2])
+
+```
+
+Another option is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. In general this is a faster clustering algorithm to do clustering. However, it requires carefully thought about resolution parameter, which can lead to different clustering results. In this simple case, keeping the default resolution parameter (0.8) gives the correct clustering results as known cell lines.
+
+The clustering results are also stored in object scppp under "clust_results". You can refer to "Lclust" under that for more details. 
+
+```{r example3, message=FALSE, warning=FALSE}
+scppp_obj <- LouvainDepart(scppp_obj)
+
+# cluster label for each cell
+clust_res2 <- scppp_obj[["clust_results"]]$Lclust[[4]]
+head(clust_res2)
+table(clust_res2[,2])
+```
+
+

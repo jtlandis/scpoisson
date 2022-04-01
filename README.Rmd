@@ -27,10 +27,10 @@ The R package scpoissonmodel is developed to visualize the Poissoneity of scRNA-
 
 ## Installation
 
-Please install from CRAN ???.
+Please install from bitbucket repository "justin_landis/scpoissonmodel".
 
 ```{r install, eval = FALSE}
-#utils::install.packages("scpoissonmodel")
+remotes::install_bitbucket("justin_landis/scpoissonmodel")
 library(scpoissonmodel)
 library(magrittr)
 library(purrr)
