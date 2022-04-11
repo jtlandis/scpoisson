@@ -56,5 +56,5 @@ qqplot_env_pois(rpois(200, 3), 3, 100)
 
 }
 \references{
-\insertRef{glmpca}{scpoissonmodel}
+\insertRef{glmpca}{scpoisson}
 }

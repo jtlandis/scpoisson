@@ -51,3 +51,5 @@ Thumbs.db
 .Rproj.user
 
 .Rhistory
+
+data/generate_data.R

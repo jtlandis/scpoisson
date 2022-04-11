@@ -1,4 +1,4 @@
-Package: scpoissonmodel
+Package: scpoisson
 Title: Single Cell Poisson Probability Paradigm
 Version: 0.0.0.9000
 Authors@R: c(
@@ -34,3 +34,5 @@ Imports:
 RdMacros: Rdpack
 Remotes: 
   nolanlab/Rclusterpp
+Depends: 
+    R (>= 2.10)

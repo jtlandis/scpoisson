@@ -9,7 +9,7 @@ counts <- map_dbl(dat, ~rpois(1, .x)) %>%
 storage.mode(counts) <- "integer"
 colnames(counts) <- paste0("cell", 1:30)
 rownames(counts) <- paste0("gene", 1:60)
-scppp_obj <- scppp(t(counts))
+scppp_obj <- scppp(counts)
 scppp_obj <- suppressWarnings(HclustDepart(scppp_obj, maxSplit = 3))
 
 test_that("HclustDepart works as expected", {

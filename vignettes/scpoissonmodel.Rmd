@@ -24,7 +24,7 @@ Then we propose using model departure as a novel data representation, which is a
 # Installing
 
 ```{r setup}
-library(scpoissonmodel)
+library(scpoisson)
 library(here)
 library(dplyr)
 library(ggplot2)
@@ -42,8 +42,8 @@ The code here is specific for validation of independent Poisson distributions ba
 
 ```{r poissoneity, message = F}
 # UMI count matrix
-test_dat <- as.data.frame(readRDS(here("data/p5.rda")))
-scppp_obj <- scppp(test_dat)
+test_dat <- as.data.frame(get_example_data("p5"))
+scppp_obj <- scppp(test_dat, "rows")
 
 # Q-Q envelope plot
 qqplot_env_pois(scppp_obj, L = 10, lambda = 5) 
@@ -63,8 +63,8 @@ The clustering results are stored in object scppp under "clust_results". You can
 
 ```{r clustering, warning=FALSE}
 # UMI count matrix
-test_dat <- as.data.frame(readRDS(here("data/p56.rda")))
-scppp_obj <- scppp(test_dat)
+test_dat <- as.data.frame(get_example_data("p56"))
+scppp_obj <- scppp(test_dat, "rows")
 
 scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3)
 

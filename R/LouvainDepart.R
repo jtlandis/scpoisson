@@ -4,7 +4,7 @@
 #'
 #' This is a function used to get cell clustering using Louvain clustering algorithm implemented in the Seurat package.
 #'
-#' @param data A UMI count matirx with cells as rows and genes as columns or an S3 object for class 'scppp'.
+#' @param data A UMI count matirx with genes as rows and cells as columns or an S3 object for class 'scppp'.
 #' @param pdat A matrix used as input for cell clustering. If not specify, the departure matrix will be calculated within the function.
 #' @param PCA A logic value specifying whether apply PCA before Louvain clustering, default is \code{TRUE}.
 #' @param N A numeric value specifying the number of principal components included for further clustering (default 15).
@@ -28,7 +28,7 @@
 #' logit_Seurat_clustering(test_set)
 #'
 #' @references
-#' \insertRef{Seurat}{scpoissonmodel}
+#' \insertRef{Seurat}{scpoisson}
 #'
 #'
 #' @export
@@ -54,7 +54,7 @@ LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
                           N = 15, pres = 0.8,
                           tsne = F, umap = F){
 
-  test_set <- data
+  test_set <- t(data)
   stopifnot('Require a matrix' = is.matrix(test_set))
   sdat <- as(as.matrix(t(test_set)), "dgCMatrix")
   sdata <- Seurat::CreateSeuratObject(counts = sdat)

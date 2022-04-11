@@ -16,7 +16,7 @@ LouvainDepart(
 )
 }
 \arguments{
-\item{data}{A UMI count matirx with cells as rows and genes as columns or an S3 object for class 'scppp'.}
+\item{data}{A UMI count matirx with genes as rows and cells as columns or an S3 object for class 'scppp'.}
 
 \item{pdat}{A matrix used as input for cell clustering. If not specify, the departure matrix will be calculated within the function.}
 
@@ -54,5 +54,5 @@ logit_Seurat_clustering(test_set)
 
 }
 \references{
-\insertRef{Seurat}{scpoissonmodel}
+\insertRef{Seurat}{scpoisson}
 }

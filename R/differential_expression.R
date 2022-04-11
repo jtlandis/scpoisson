@@ -45,7 +45,7 @@ diff_gene_list.matrix <- function(data, final_clust_res,
                            t = F){
   stopifnot('Clust1 not match the cluster label from HclustDepart' = clust1 %in% final_clust_res$cluster)
   stopifnot('Clust2 not match the cluster label from HclustDepart' = clust2 %in% final_clust_res$cluster)
-  test_dat2 <- data
+  test_dat2 <- t(data)
   cell_in <- final_clust_res$names[which(final_clust_res$cluster %in%
                                            c(clust1, clust2))]
   test_dat2 <- test_dat2[which(rownames(test_dat2) %in% cell_in),]
@@ -109,76 +109,4 @@ diff_gene_list.matrix <- function(data, final_clust_res,
            arrange(desc(mean_diff)))
 }
 
-#' Update departure matrix based on clusters used for comparison (input should be the raw UMI count matrix)
-#' @export
-#' @return scppp_de_results
-diff_gene_list.matrix2 <- function(data, final_clust_res,
-                                  clust1 = "1", clust2 = "2",
-                                  t = F){
-  stopifnot('Clust1 not match the cluster label from HclustDepart' = clust1 %in% final_clust_res$cluster)
-  stopifnot('Clust2 not match the cluster label from HclustDepart' = clust2 %in% final_clust_res$cluster)
 
-
-  cell_in <- final_clust_res$names[which(final_clust_res$cluster %in%
-                                           c(clust1, clust2))]
-  data <- data[which(rownames(test_dat2) %in% cell_in),]
-  data <- data[, colSums(data) > 0]
-  test_dat2 <- adj_CDF_logit(data)
-
-  dat_long3 <- data.frame(names = rownames(test_dat2), test_dat2)
-  dat_long3 <- dat_long3 %>%
-    tidyr::gather(variable, value, -names)
-  dat_long3 <- merge(dat_long3, final_clust_res, by = "names")
-  dat_long3$clust_test <- ifelse(dat_long3$cluster %in% clust1, "A", "B")
-
-  fc_df2 <- dat_long3 %>%
-    dplyr::group_by(variable, clust_test) %>%
-    dplyr::summarize(Mean = mean(value, na.rm=TRUE))
-
-
-  #fc_df_wide <- reshape2::dcast(fc_df2,  variable ~ clust_test, value.var="Mean")
-  fc_df_wide <- fc_df2 %>%
-    tidyr::spread(key = clust_test, value = Mean)
-  fc_df_wide$mean_diff <- fc_df_wide$A - fc_df_wide$B
-
-  if(!t){
-    k <- dat_long3 %>%
-      dplyr::group_by(variable, clust_test) %>%
-      tidyr::nest() %>%
-      tidyr::spread(key = clust_test, value = data) %>%
-      dplyr::mutate(
-        test = purrr::map2(A, B, ~{wilcox.test(.x$value, .y$value) %>% broom::tidy()}),
-        A = purrr::map(A, nrow),
-        B = purrr::map(B, nrow)
-      ) %>%
-      tidyr::unnest(cols = c(A, B, test))
-  }
-
-  if(t){
-    k <- dat_long3 %>%
-      dplyr::group_by(variable, clust_test) %>%
-      tidyr::nest() %>%
-      tidyr::spread(key = clust_test, value = data) %>%
-      dplyr::mutate(
-        test = purrr::map2(A, B, ~{t.test(.x$value, .y$value) %>% broom::tidy()}),
-        A = purrr::map(A, nrow),
-        B = purrr::map(B, nrow)
-      ) %>%
-      tidyr::unnest(cols = c(A, B, test))
-  }
-
-  fc_df_wide <- merge(fc_df_wide, k, by = "variable")
-  fc_df_wide$abs_diff <- abs(fc_df_wide$mean_diff)
-  fc_df_wide$FC <- fc_df_wide$A.x / fc_df_wide$B.x
-  fc_df_wide$padj <- p.adjust(fc_df_wide$p.value, "fdr")
-  fc_df_wide <- fc_df_wide %>%
-    dplyr::rename(clust1_mean = "A.x",
-           clust2_mean = "B.x",
-           clust1_n = "A.y",
-           clust2_n = "B.y")
-  return(fc_df_wide %>%
-           dplyr::select(variable, clust1_mean, clust2_mean, clust1_n, clust2_n,
-                         mean_diff, statistic, p.value, padj, abs_diff) %>%
-           #filter(padj < 0.05) %>%
-           arrange(desc(mean_diff)))
-}

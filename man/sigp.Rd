@@ -7,7 +7,7 @@
 sigp(test_dat, minSize = 10, sim = 100)
 }
 \arguments{
-\item{test_dat}{A UMI count data matrix with cells as rows and genes as columns.}
+\item{test_dat}{A UMI count data matrix with samples to cluster as rows and features as columns.}
 
 \item{minSize}{A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).}
 
@@ -37,6 +37,6 @@ para_est_new(test_set)
 
 }
 \references{
-\insertRef{kimes2017statistical}{scpoissonmodel}
-\insertRef{Rclusterpp}{scpoissonmodel}
+\insertRef{kimes2017statistical}{scpoisson}
+\insertRef{Rclusterpp}{scpoisson}
 }

@@ -6,14 +6,14 @@
 #' This is a function used to calculate parameter estimates based on
 #' \eqn{\lambda_{gc}  = e^{\mu + \alpha_g + \beta_c}},
 #' where \eqn{\mu} is the overall offset,
-#' \eqn{\alpha} is a vector with the same length as the numer of genes,
-#' and \eqn{\beta} is a vector with the same length as the numer of cells.
-#' The order of elements in vectors \eqn{\alpha} or \eqn{\beta} is the same as rows (cells) or
-#' genes (columns) from input data. Be sure to remove cells/genes with all zeros.
+#' \eqn{\alpha} is a vector with the same length as the number of genes,
+#' and \eqn{\beta} is a vector with the same length as the number of cells.
+#' The order of elements in vectors \eqn{\alpha} or \eqn{\beta} is the same as rows (genes) or
+#' cells (columns) from input data. Be sure to remove cells/genes with all zeros.
 #'
-#' @param test_set A UMI count data matrix with cells as rows and genes as columns
+#' @param test_set A UMI count data matrix with genes as rows and cells as columns
 #'
-#' @return A numeric vector containing parameter estimates from overall offset (first element), cell effect (same order as rows) and gene effect (same order as columns).
+#' @return A numeric vector containing parameter estimates from overall offset (first element), gene effect (same order as rows) and cell effect (same order as columns).
 #'
 #' @examples
 #'
@@ -22,6 +22,8 @@
 #'
 para_est_new <- function(test_set){
 
+  stopifnot('Remove columns with only zero values' = min(colSums(test_set)) > 0)
+  stopifnot('Remove rows with only zero values' = min(rowSums(test_set)) > 0)
   test_set <- test_set[, which(colSums(test_set) > 0)]
   n <- nrow(test_set)
   d <- ncol(test_set)
@@ -42,7 +44,7 @@ para_est_new <- function(test_set){
 #'
 #' This is a function used to calculate model departure as a novel data representation.
 #'
-#' @param data A UMI count data matrix with cells as rows and genes as columns or an S3 object for class 'scppp'.
+#' @param data A UMI count data matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.
 #' @param change A numeric value used to correct for exactly 0 and 1 before logit transformation.
 #' Any values below \code{change} are set to be \code{change} and
 #' any values above \eqn{1- change} are set to be \eqn{1- change}.
@@ -77,7 +79,6 @@ adj_CDF_logit.matrix <- function(data, change = 1e-10){
   stopifnot('Require a matrix as input' = is.matrix(test_set))
   stopifnot('Remove columns with only zero values' = min(colSums(test_set)) > 0)
   stopifnot('Remove rows with only zero values' = min(rowSums(test_set)) > 0)
-  test_set <- test_set[, which(colSums(test_set) > 0)]
   n <- nrow(test_set)
   d <- ncol(test_set)
   para <- para_est_new(test_set)

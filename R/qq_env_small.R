@@ -272,7 +272,7 @@ nboot_small <- function(x, lambda, R) {
 #' @return A ggplot object.
 #'
 #' @references
-#' \insertRef{glmpca}{scpoissonmodel}
+#' \insertRef{glmpca}{scpoisson}
 #'
 #' @examples
 #'
@@ -355,7 +355,7 @@ qqplot_env_pois.scppp <- function(scppp_obj, lambda,
         return(test_raw[1:entry_size])
       }
 
-      if(select_by == "cell"){
+      if(select_by == "gene"){
         cell_mean <- rowMeans(test_dat)
         measure <- abs(cell_mean - lambda)
         index <- which(measure == min(measure))
@@ -366,7 +366,7 @@ qqplot_env_pois.scppp <- function(scppp_obj, lambda,
         return(test_dat[which(rownames(test_dat) == select_cell[1]), ])
       }
 
-      if(select_by == "gene"){
+      if(select_by == "cell"){
         gene_mean <- colMeans(test_dat)
         measure <- abs(gene_mean - lambda)
         index <- which(measure == min(measure))
@@ -382,7 +382,7 @@ qqplot_env_pois.scppp <- function(scppp_obj, lambda,
     apply_glmpca <- function(rawdata, L = 10){
 
       set.seed(1234)
-      test_df <- t(rawdata)
+      test_df <- rawdata
       test_df <- test_df[which(rowSums(test_df) > 0), ]
       ctl <- list(maxIter=500,eps=1e-4)
       res <- glmpca::glmpca(test_df, L=L, fam = "poi", sz=colSums(test_df),verbose=TRUE,ctl=ctl)
@@ -393,7 +393,7 @@ qqplot_env_pois.scppp <- function(scppp_obj, lambda,
       Ni <- colSums(test_df)
       Vj <- as.vector(as.matrix(res$coefX))
       Gfit_dat <- exp(t(t(U %*% t(V)) + Vj) + log(Ni))
-      return((Gfit_dat))
+      return(t(Gfit_dat))
     }
 
     test <- as.matrix(test_data)

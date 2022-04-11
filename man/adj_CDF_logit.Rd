@@ -7,7 +7,7 @@
 adj_CDF_logit(data, change = 1e-10, ...)
 }
 \arguments{
-\item{data}{A UMI count data matrix with cells as rows and genes as columns or an S3 object for class 'scppp'.}
+\item{data}{A UMI count data matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.}
 
 \item{change}{A numeric value used to correct for exactly 0 and 1 before logit transformation.
 Any values below \code{change} are set to be \code{change} and

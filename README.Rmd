@@ -23,7 +23,7 @@ output: github_document
 
 ## Overview
 
-The R package scpoissonmodel is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on departure as a novel data representation.
+The R package scpoissonmodel is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on model departure as a novel data representation.
 
 ## Installation
 
@@ -75,7 +75,7 @@ counts <- map_int(dat, ~rpois(1, .x)) %>%
     matrix(ncol = 30)
 colnames(counts) <- paste0("cell", 1:30)
 rownames(counts) <- paste0("gene", 1:60)
-scppp_obj <- scppp(t(counts))
+scppp_obj <- scppp(counts)
 heatmap(scppp_obj[["data"]])
 scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3)
 

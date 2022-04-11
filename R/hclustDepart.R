@@ -5,7 +5,7 @@
 #' This is a function used to calculate the significance level of the first split from hierarchical clustering
 #' based on euclidean distance and Ward's linkage.
 #'
-#' @param test_dat A UMI count data matrix with cells as rows and genes as columns.
+#' @param test_dat A UMI count data matrix with samples to cluster as rows and features as columns.
 #' @param minSize A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).
 #' @param sim A numeric value specifying the number of simulations during the Monte Carlo simulation procedure (default 100).
 #'
@@ -24,13 +24,15 @@
 #' para_est_new(test_set)
 #'
 #' @references
-#' \insertRef{kimes2017statistical}{scpoissonmodel}
-#' \insertRef{Rclusterpp}{scpoissonmodel}
+#' \insertRef{kimes2017statistical}{scpoisson}
+#' \insertRef{Rclusterpp}{scpoisson}
 #'
 #'
 sigp <- function(test_dat, minSize = 10, sim = 100){
 
+  test_dat <- test_dat
   stopifnot('Require a matrix' = is.matrix(test_dat))
+  stopifnot('Remove columns with only zero values' = min(colSums(test_dat)) > 0)
   stopifnot('Remove rows with only zero values' = min(rowSums(test_dat)) > 0)
   if(nrow(test_dat) <= minSize) {
     return(list(NA,NA, NA, NA))
@@ -71,7 +73,7 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' (2) the maximum allowable number of splitting steps is reached;
 #' (3) any current cluster has less than 10 cells.
 #'
-#' @param test_dat A UMI count matrix with cells as rows and genes as columns or an S3 object for class 'scppp'.
+#' @param test_dat A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.
 #' @param maxSplit A numeric value specifying the maximum allowable number of splitting steps (default 10).
 #' @param minSize A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).
 #' @param sim A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100)
@@ -112,8 +114,9 @@ HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100) {
 #' @return scppp_hclust_results
 HclustDepart.matrix <- function(data, maxSplit = 10, minSize = 10, sim = 100){
 
-  test_dat <- data
-  stopifnot('Remove rows with only zero values' = min(rowSums(test_dat)) > 0)
+  test_dat <- t(data)
+  stopifnot('Remove columns with only zero values' = min(rowSums(test_dat)) > 0)
+  stopifnot('Remove rows with only zero values' = min(colSums(test_dat)) > 0)
   test_dat <- test_dat[, which(colSums(test_dat) > 0)]
 
   S <- minSize

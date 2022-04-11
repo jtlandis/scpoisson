@@ -10,7 +10,7 @@ counts <- map_dbl(dat, ~rpois(1, .x)) %>%
 storage.mode(counts) <- "integer"
 colnames(counts) <- paste0("c", 1:30)
 rownames(counts) <- paste0("g", 1:60)
-scppp_obj <- scppp(t(counts))
+scppp_obj <- scppp(counts)
 scppp_obj <- suppressWarnings(HclustDepart(scppp_obj, maxSplit = 3))
 scppp_obj <- adj_CDF_logit(scppp_obj)
 
