@@ -38,7 +38,7 @@ library(purrr)
 
 ## Visualization
 
-The examples below show Q-Q envelope plots comparing sample data with a theoretical Poisson distribution given the Poisson parameter (mean). The input can be either a numeric vector or a numeric matrix consists of integers. If the input is a numeric matrix, the GLM-PCA algorithm will be applied for parameter estimation. Then some matrix entries (default 200) will be selected as sample data and compare with the theoretical distribution. 
+The examples below show Q-Q envelope plots comparing sample data with a theoretical Poisson distribution given the Poisson parameter (mean). The input can be either a numeric vector or a numeric matrix consists of integers. If the input is a numeric matrix, the GLM-PCA algorithm will be applied for parameter estimation. Then some matrix entries (default 200, with estimated Poisson parameters closest to the given Poisson parameter) will be selected as sample data and compare with the theoretical distribution. 
 
 The code here is specific for validation of independent Poisson distributions, but such idea can be applied to different types of data under different assumptions of distributions.
 
@@ -60,7 +60,7 @@ Please refer to vignette for a more detailed guide, including the application in
 
 ## Clustering
 
-The example below shows clustering pipeline based on a simplified two-cluster data. The results are save in a list. The first element contains the clustering results for each sample, where the cluster label shows the top-down cluster in a tree structure. E.g. Both cluster '1-1' and cluster '1-2' are subclusters from cluster '1' after first split; while cluster '1-1' and cluster '2-1' come from different cluster after first split.  The second element is a matrix with samples as rows and cluster index as columns, where each entry contains the p-value corresponding to each cell at each split.
+The example below shows clustering pipeline based on a simplified two-cluster simulated data. The results wil be saved in a list. The first element contains the clustering results for each sample, where the cluster label shows the top-down cluster in a tree structure. E.g. Both cluster '1-1' and cluster '1-2' are subclusters from cluster '1' after first split; while cluster '1-1' and cluster '2-1' come from different cluster after first split.  The second element is a matrix with samples as rows and cluster index as columns, where each entry contains the p-value corresponding to each cell at each split.
 
 This simplified example only contains two clusters, with cluster label either '1' or '2'.
 
