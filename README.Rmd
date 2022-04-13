@@ -5,40 +5,25 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: github_document
 ---
 
-```{r setup, include=FALSE}
-# library(ggplot2)
-# library(dplyr)
-# library(purrr)
-# library(here)
-# 
-# source(here("R/utils.R"))
-# source(here("R/qq_env_small.R"))
-# source(here("R/data_representation.R"))
-# source(here("R/hclustDepart.R"))
-# source(here("R/seurat_plus.R"))
-# source(here("R/Object_representation.R"))
-# source(here("R/differential_expression.R"))
-```
-
 
 ## Overview
 
-The R package scpoissonmodel is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on model departure as a novel data representation.
+The R package 'scpoisson' is developed to visualize the Poissoneity of scRNA-seq data, and explore cell clustering based on model departure as a novel data representation.
 
 ## Installation
 
-Please install from bitbucket repository "justin_landis/scpoissonmodel".
+Please install from bitbucket repository "dittmerlab/scpoisson".
 
 ```{r install, eval = FALSE}
-remotes::install_bitbucket("justin_landis/scpoissonmodel")
-library(scpoissonmodel)
+remotes::install_bitbucket("dittmerlab/scpoisson")
+library(scpoisson)
 library(magrittr)
 library(purrr)
 ```
 
 ## Visualization
 
-The examples below show Q-Q envelope plots comparing sample data with a theoretical Poisson distribution given the Poisson parameter (mean). The input can be either a numeric vector or a numeric matrix consists of integers. If the input is a numeric matrix, the GLM-PCA algorithm will be applied for parameter estimation. Then some matrix entries (default 200, with estimated Poisson parameters closest to the given Poisson parameter) will be selected as sample data and compare with the theoretical distribution. 
+The examples below show Q-Q envelope plots comparing sample data with a theoretical Poisson distribution given the Poisson parameter (mean). The input can be either a numeric vector or a numeric matrix consists of integers. If the input is a numeric matrix, the GLM-PCA algorithm will be applied for parameter estimation. Then some matrix entries (default 200, with estimated Poisson parameters closest to the given Poisson parameter) will be selected as sample data and compare with the theoretical distribution. If the theoretical distribution fits the sample data well, the quantile points (or line) will approximately lie on the diagonal line, and also within the envelope. 
 
 The code here is specific for validation of independent Poisson distributions, but such idea can be applied to different types of data under different assumptions of distributions.
 
@@ -60,7 +45,7 @@ Please refer to vignette for a more detailed guide, including the application in
 
 ## Clustering
 
-The example below shows clustering pipeline based on a simplified two-cluster simulated data. The results wil be saved in a list. The first element contains the clustering results for each sample, where the cluster label shows the top-down cluster in a tree structure. E.g. Both cluster '1-1' and cluster '1-2' are subclusters from cluster '1' after first split; while cluster '1-1' and cluster '2-1' come from different cluster after first split.  The second element is a matrix with samples as rows and cluster index as columns, where each entry contains the p-value corresponding to each cell at each split.
+The example below shows Hclust-Depart clustering pipeline based on based on model departure using a simplified two-cluster simulated data. The results will be saved in a list. The first element contains the clustering results for each sample, where the cluster label shows the top-down cluster in a tree structure. E.g. Both cluster '1-1' and cluster '1-2' are subclusters from cluster '1' after first split; while cluster '1-1' and cluster '2-1' come from different cluster after first split.  The second element is a matrix with samples/cells as rows and cluster index as columns, where each entry contains the hypothesis testing p-value corresponding to each cluster at each split step (each cell within the that cluster will have the same p-value).
 
 This simplified example only contains two clusters, with cluster label either '1' or '2'.
 
@@ -89,14 +74,18 @@ head(scppp_obj[["clust_results"]]$Hclust[[2]])
 
 Please refer to vignette for a more detailed guide, including the application in the real data.
 
-Another option is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. 
+Another option is: keep model departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. 
 
 ```{r example3, message=FALSE, warning=FALSE}
 scppp_obj <- LouvainDepart(scppp_obj)
 head(scppp_obj[["clust_results"]]$Lclust[[4]])
 ```
 
+In this simple case, both clustering pipeline give the same clustering results as we expected.
+
 ## Differential Expression
+
+We can find differentially expressed genes between two clusters based on model departure. Run 'adj_CDF_logit' function first to calculate the departure representation. The cluster labels for such comparison need to match the output from Hclust-Depart clustering. The genes in the output will be ranked by decreasing order of mean difference between two clusters.
 
 ```{r example4, message=FALSE, warning=FALSE}
 scppp_obj <- adj_CDF_logit(scppp_obj) 
@@ -111,4 +100,7 @@ Please report any issues at ???.
 
 ## References
 
+Townes, F. W., Hicks, S. C., Aryee, M. J., & Irizarry, R. A. (2019). Feature selection and dimension reduction for single-cell RNA-Seq based on a multinomial model. Genome biology, 20(1), 1-16.
+
+Stuart T, Butler A, Hoffman P, Hafemeister C, Papalexi E, III WMM, Hao Y, Stoeckius M, Smibert P, Satija R (2019). “Comprehensive Integration of Single-Cell Data.” Cell, 177, 1888-1902. doi: 10.1016/j.cell.2019.05.031, https://doi.org/10.1016/j.cell.2019.05.031.
 
