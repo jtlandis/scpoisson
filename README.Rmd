@@ -16,10 +16,14 @@ Please install from bitbucket repository "dittmerlab/scpoisson".
 
 ```{r install, eval = FALSE}
 remotes::install_bitbucket("dittmerlab/scpoisson")
+```
+
+```{r packages_example}
 library(scpoisson)
 library(magrittr)
 library(purrr)
 ```
+
 
 ## Visualization
 
@@ -96,7 +100,7 @@ head(scppp_obj[["de_results"]]$Hclust)
 
 ## Issues and bug reports
 
-Please report any issues at ???.
+Please report any issues at [bitbucket repository](https://bitbucket.org/dittmerlab/scpoisson/issues).
 
 ## References
 
