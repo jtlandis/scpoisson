@@ -1,4 +1,4 @@
 library(testthat)
-library(scpoissonmodel)
+library(scpoisson)
 
-test_check("scpoissonmodel")
+test_check("scpoisson")
