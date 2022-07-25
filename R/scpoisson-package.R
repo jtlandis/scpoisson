@@ -10,6 +10,7 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr rename
 #' @importFrom dplyr summarize
+#' @importFrom magrittr %>%
 #' @importFrom Matrix as.matrix
 #' @importFrom purrr map
 #' @importFrom purrr map_dbl
