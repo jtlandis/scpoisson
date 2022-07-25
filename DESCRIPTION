@@ -1,6 +1,6 @@
 Package: scpoisson
 Title: Single Cell Poisson Probability Paradigm
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Yue", "Pan", email = "yue221@live.unc.edu", role = c("aut", "cre")),
     person("Justin", "Landis", email = "jtlandis314@gmail.com", role = c("aut"),
