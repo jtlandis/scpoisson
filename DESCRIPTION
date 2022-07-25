@@ -9,8 +9,7 @@ Authors@R: c(
     person("James S.", "Marron", role = "aut", email = "marron@unc.edu"),
     person("Di", "Wu", role = "aut", email = "did@email.unc.edu"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -30,7 +29,10 @@ Imports:
     tidyr,
     purrr,
     Matrix,
-    Rdpack 
+    Rdpack,
+    SeuratObject,
+    WGCNA,
+    broom
 RdMacros: Rdpack
 Depends: 
     R (>= 2.10)
