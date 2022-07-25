@@ -4,7 +4,7 @@
 #'
 #' The logit function transforms a probability within the range of 0 and 1 to the real line
 #'
-#' @param x a numeric value of probability, ranges between 0 and 1, exactly 0 and 1 not allowed
+#' @param p a numeric value of probability, ranges between 0 and 1, exactly 0 and 1 not allowed
 #'
 #' @return a numeric value transformed to the real line
 #'
@@ -31,9 +31,6 @@ logit <- function (p) {
 #'
 #' @return a string with unwanted characters removed
 #'
-#' @examples
-#'
-#' clust_clean("1-1-NA")
 #'
 clust_clean <- function(clust){
   .lgl <- grepl("NA", clust, fixed = TRUE)
