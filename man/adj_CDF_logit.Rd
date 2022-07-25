@@ -12,6 +12,8 @@ adj_CDF_logit(data, change = 1e-10, ...)
 \item{change}{A numeric value used to correct for exactly 0 and 1 before logit transformation.
 Any values below \code{change} are set to be \code{change} and
 any values above \eqn{1- change} are set to be \eqn{1- change}.}
+
+\item{...}{not used.}
 }
 \value{
 A matrix of departure as a novel data representation (matrix as input) or an S3 object for class 'scppp' (scppp object as input; departure result will be stored in object scppp under "representation").

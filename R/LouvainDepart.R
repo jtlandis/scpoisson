@@ -4,7 +4,7 @@
 #'
 #' This is a function used to get cell clustering using Louvain clustering algorithm implemented in the Seurat package.
 #'
-#' @param data A UMI count matirx with genes as rows and cells as columns or an S3 object for class 'scppp'.
+#' @param data A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.
 #' @param pdat A matrix used as input for cell clustering. If not specify, the departure matrix will be calculated within the function.
 #' @param PCA A logic value specifying whether apply PCA before Louvain clustering, default is \code{TRUE}.
 #' @param N A numeric value specifying the number of principal components included for further clustering (default 15).
@@ -25,7 +25,10 @@
 #'
 #' @examples
 #'
-#' test_set <- matrix(rpois(500, 0.5), nrow = 10)
+#' set.seed(1234)
+#' test_set <- matrix(rpois(500, 2), nrow = 20)
+#' rownames(test_set) <- paste0("gene", 1:nrow(test_set))
+#' colnames(test_set) <- paste0("cell", 1:ncol(test_set))
 #' LouvainDepart(test_set)
 #'
 #' @references

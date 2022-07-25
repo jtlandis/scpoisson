@@ -16,7 +16,7 @@ LouvainDepart(
 )
 }
 \arguments{
-\item{data}{A UMI count matirx with genes as rows and cells as columns or an S3 object for class 'scppp'.}
+\item{data}{A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.}
 
 \item{pdat}{A matrix used as input for cell clustering. If not specify, the departure matrix will be calculated within the function.}
 
@@ -51,7 +51,10 @@ This is a function used to get cell clustering using Louvain clustering algorith
 }
 \examples{
 
-test_set <- matrix(rpois(500, 0.5), nrow = 10)
+set.seed(1234)
+test_set <- matrix(rpois(500, 2), nrow = 20)
+rownames(test_set) <- paste0("gene", 1:nrow(test_set))
+colnames(test_set) <- paste0("cell", 1:ncol(test_set))
 LouvainDepart(test_set)
 
 }
