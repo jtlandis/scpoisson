@@ -4,20 +4,16 @@
 \alias{qqplot_env_pois}
 \title{Q-Q plot comparing samples with a theoretical Poisson distribution}
 \usage{
-qqplot_env_pois(
-  sample_data,
-  lambda,
-  L = 10,
-  select_by = "entry",
-  entry_size = 200,
-  envelope_size = 100,
-  ...
-)
+qqplot_env_pois(sample_data, lambda, envelope_size = 100, ...)
 }
 \arguments{
 \item{sample_data}{A numeric vector of sample data points or an S3 object for class 'scppp'.}
 
 \item{lambda}{A numeric value specifying the theoretical Poisson parameter.}
+
+\item{envelope_size}{A numeric value specifying the size of envelope on Q-Q plot (default 100).}
+
+\item{...}{not used.}
 
 \item{L}{A numeric value specifying the number of latent vectors included when estimate the Poisson parameter for each matrix entry. This is not useful if a numeric vector is used as input.}
 
@@ -31,10 +27,6 @@ This is not useful if a numeric vector is used as input.}
 
 \item{entry_size}{A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
 This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.}
-
-\item{envelope_size}{A numeric value specifying the size of envelope on Q-Q plot (default 100).}
-
-\item{...}{not used.}
 }
 \value{
 A ggplot object.

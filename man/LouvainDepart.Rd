@@ -52,7 +52,7 @@ This is a function used to get cell clustering using Louvain clustering algorith
 \examples{
 
 test_set <- matrix(rpois(500, 0.5), nrow = 10)
-logit_Seurat_clustering(test_set)
+LouvainDepart(test_set)
 
 }
 \references{

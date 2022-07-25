@@ -26,7 +26,7 @@
 #' @examples
 #'
 #' test_set <- matrix(rpois(500, 0.5), nrow = 10)
-#' logit_Seurat_clustering(test_set)
+#' LouvainDepart(test_set)
 #'
 #' @references
 #' \insertRef{Seurat}{scpoisson}

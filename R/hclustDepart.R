@@ -73,7 +73,7 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' (2) the maximum allowable number of splitting steps is reached;
 #' (3) any current cluster has less than 10 cells.
 #'
-#' @param test_dat A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.
+#' @param data A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.
 #' @param maxSplit A numeric value specifying the maximum allowable number of splitting steps (default 10).
 #' @param minSize A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).
 #' @param sim A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100).

@@ -282,9 +282,7 @@ nboot_small <- function(x, lambda, R) {
 #' @import ggplot2
 #'
 #' @export
-qqplot_env_pois <- function(sample_data, lambda, L = 10,
-                            select_by = "entry",
-                            entry_size = 200, envelope_size = 100, ...) {
+qqplot_env_pois <- function(sample_data, lambda, envelope_size = 100, ...) {
   UseMethod("qqplot_env_pois")
 }
 
@@ -335,11 +333,11 @@ qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100, ..
 }
 
 #' @export
-qqplot_env_pois.scppp <- function(scppp_obj, lambda,
+qqplot_env_pois.scppp <- function(sample_data, lambda, envelope_size = 100,
                                   L = 10,
                                   select_by = "entry",
-                                  entry_size = 200, envelope_size = 100, ...){
-  test_data <- scppp_obj[["data"]]
+                                  entry_size = 200, ...){
+  test_data <- sample_data[["data"]]
   if(is.vector(test_data) && is.atomic(test_data)){
     qqplot_env_pois.numeric(test_data, lambda, envelope_size)
   }
