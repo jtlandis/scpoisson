@@ -2,3 +2,4 @@
 ^renv\.lock$
 ^scpoissonmodel\.Rproj$
 ^\.Rproj\.user$
+^\.github$
