@@ -42,7 +42,7 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
   }
   clust_dat <- adj_CDF_logit(test_dat)
 
-  shc_result <- shc_test(as.matrix(clust_dat), metric="euclidean", linkage="ward", icovest = 2, rcpp = T, n_sim = sim)
+  shc_result <- shc_test(as.matrix(clust_dat), metric="euclidean", linkage="ward.D2", icovest = 2, n_sim = sim)
   p <- round(shc_result$p_norm[1], 7)
   m_idx <- colMeans(as.matrix(shc_result$ci_sim[1, , ]))
   s_idx <- apply(as.matrix(shc_result$ci_sim[1, , ]), 2, sd)

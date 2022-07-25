@@ -24,7 +24,6 @@ Imports:
     glmpca,
     SingleCellExperiment,
     Seurat,
-    Rclusterpp,
     magrittr,
     dplyr,
     tidyr,
@@ -32,7 +31,5 @@ Imports:
     Matrix,
     Rdpack 
 RdMacros: Rdpack
-Remotes: 
-  nolanlab/Rclusterpp
 Depends: 
     R (>= 2.10)

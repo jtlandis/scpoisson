@@ -127,7 +127,7 @@ theme_dirk <- function(base_size = 22,
 shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
                      linkage = "ward.D2", l = 2,
                      alpha = 1, icovest = 1, bkgd_pca = FALSE, n_sim = 100,
-                     n_min = 10, rcpp = FALSE, ci = "2CI", null_alg = "hclust",
+                     n_min = 10, ci = "2CI", null_alg = "hclust",
                      ci_idx = 1, ci_emp = FALSE) {
 
   n <- nrow(x)
@@ -187,12 +187,6 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
     metric <- NULL
   }
 
-  if (rcpp && !requireNamespace("Rclusterpp", quietly = TRUE)) {
-    stop("'Rclusterpp' package is not available.\n",
-         "Either specify 'rcpp = FALSE' or install 'Rclusterpp' from GitHub using:\n",
-         "> devtools::install_github('nolanlab/Rclusterpp')")
-  }
-
   ## test vecmet and assign matmet if vecmet specified
   if (!is.null(vecmet)) {
     tryCatch({
@@ -208,22 +202,13 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
     }
   }
 
-  ## rclusterpp doesn't recognize 'ward.D2', stop and let user know
-  if ((linkage == "ward.D2") & rcpp) {
-    stop("Use 'ward' (in place of 'ward.D2') for linkage when rcpp = TRUE.")
-  }
-
   ## apply initial clustering
   x_clust <- .initcluster(x, n, p, metric, matmet, linkage, l,
-                          n_ci, ci, rcpp)
+                          n_ci, ci)
   ci_dat <- x_clust$ci_dat
   hc_dat <- x_clust$hc_dat
   idx_hc <- x_clust$idx_hc
 
-  ## for plotting purposes, change heights of dendrogram
-  if ((linkage == "ward") & rcpp) {
-    hc_dat$height <- sqrt(2*hc_dat$height)
-  }
 
   ## p-values for all <= (n-1) tests
   p_emp <- matrix(2, nrow=n-1, ncol=n_ci)
@@ -276,7 +261,7 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
       for (i in 1:n_sim) {
         xsim <- .simnull(xk_null$eigval_sim, n_sub, p)
         ci_sim[k, i, ] <- .calcCI_shc(xsim, p, metric, matmet, linkage, l,
-                                      n_ci, ci, null_alg, rcpp)
+                                      n_ci, ci, null_alg)
       }
     )
 
@@ -386,15 +371,12 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
 
 
 ## parse clustering parameters to produce hclust object
-.cluster_shc <- function(x, metric, matmet, linkage, l, rcpp) {
+.cluster_shc <- function(x, metric, matmet, linkage, l) {
   if (!is.null(matmet)) {
     hc_dat <- hclust(matmet(x), method=linkage)
   } else if (metric == "cor") {
     dmat <- 1 - WGCNA::cor(t(x))
     hc_dat <- hclust(as.dist(dmat), method=linkage)
-  } else if (rcpp) {
-    hc_dat <- Rclusterpp::Rclusterpp.hclust(x, method=linkage,
-                                            distance=metric, p=l)
   } else {
     hc_dat <- hclust(dist(x, method=metric, p=l), method=linkage)
   }
@@ -405,10 +387,10 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
 ## perform hierarchical clustering on the original data and
 ## compute the corresponding cluster indices for each merge
 .initcluster <- function(x, n, p, metric, matmet, linkage, l,
-                         n_ci, ci, rcpp) {
+                         n_ci, ci) {
 
   ## obtain clustering solution
-  hc_dat <- .cluster_shc(x, metric, matmet, linkage, l, rcpp)
+  hc_dat <- .cluster_shc(x, metric, matmet, linkage, l)
 
   ## list array of cluster indices at each of the n-1 nodes
   idx_hc <- .idx_hc(hc_dat, n)
@@ -444,10 +426,10 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
 ## perform hierarchical clustering on a simulated dataset and
 ## compute the correspond cluster indices for only the final merge
 .calcCI_shc <- function(x, p, metric, matmet, linkage, l,
-                        n_ci, ci, null_alg, rcpp) {
+                        n_ci, ci, null_alg) {
 
   ##obtain clustering solution
-  hc_isim <- .cluster_shc(x, metric, matmet, linkage, l, rcpp)
+  hc_isim <- .cluster_shc(x, metric, matmet, linkage, l)
   split <- cutree(hc_isim, k=2)
 
   ##row vector containing cluster indices
