@@ -4,7 +4,14 @@
 \alias{diff_gene_list.matrix}
 \title{Use departure matrix from the first step (input should be the departure matrix by running adj_CDF_logit)}
 \usage{
-\method{diff_gene_list}{matrix}(data, final_clust_res, clust1 = "1", clust2 = "2", t = F, ...)
+\method{diff_gene_list}{matrix}(
+  data,
+  final_clust_res = NULL,
+  clust1 = "1",
+  clust2 = "2",
+  t = F,
+  ...
+)
 }
 \value{
 scppp_de_results

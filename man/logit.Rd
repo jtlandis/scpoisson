@@ -7,7 +7,7 @@
 logit(p)
 }
 \arguments{
-\item{x}{a numeric value of probability, ranges between 0 and 1, exactly 0 and 1 not allowed}
+\item{p}{a numeric value of probability, ranges between 0 and 1, exactly 0 and 1 not allowed}
 }
 \value{
 a numeric value transformed to the real line

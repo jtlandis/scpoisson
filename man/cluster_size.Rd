@@ -15,9 +15,3 @@ a numeric value with number of cells to cluster
 \description{
 This function calcualtes the numer of elements in current cluster
 }
-\examples{
-
-test_set <- matrix(rpois(500, 0.5), nrow = 10)
-cluster_size(test_set)
-
-}

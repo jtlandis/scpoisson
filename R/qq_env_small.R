@@ -257,16 +257,6 @@ nboot_small <- function(x, lambda, R) {
 #'
 #' @param sample_data A numeric vector of sample data points or an S3 object for class 'scppp'.
 #' @param lambda A numeric value specifying the theoretical Poisson parameter.
-#' @param L A numeric value specifying the number of latent vectors included when estimate the Poisson parameter for each matrix entry. This is not useful if a numeric vector is used as input.
-#' @param select_by A character indicating whether entries should be selected by
-#' \itemize{
-#' \item{entry}: {independent matrix entries with Poisson parameter estimates closest to \code{lambda}}
-#' \item{\code{cell}}: {one particular cell with UMI count mean closest to \code{lambda}}
-#' \item{\code{gene}}: {one particular gene with UMI count mean closest to \code{lambda}}
-#' }
-#' This is not useful if a numeric vector is used as input.
-#' @param entry_size A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
-#' This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.
 #' @param envelope_size A numeric value specifying the size of envelope on Q-Q plot (default 100).
 #' @param ... not used.
 #'
@@ -332,6 +322,16 @@ qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100, ..
   return(p)
 }
 
+#' @param L A numeric value specifying the number of latent vectors included when estimate the Poisson parameter for each matrix entry. This is not useful if a numeric vector is used as input.
+#' @param select_by A character indicating whether entries should be selected by
+#' \itemize{
+#' \item{entry}: {independent matrix entries with Poisson parameter estimates closest to \code{lambda}}
+#' \item{\code{cell}}: {one particular cell with UMI count mean closest to \code{lambda}}
+#' \item{\code{gene}}: {one particular gene with UMI count mean closest to \code{lambda}}
+#' }
+#' This is not useful if a numeric vector is used as input.
+#' @param entry_size A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
+#' This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.
 #' @export
 qqplot_env_pois.scppp <- function(sample_data, lambda, envelope_size = 100,
                                   L = 10,

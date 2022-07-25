@@ -14,19 +14,6 @@ qqplot_env_pois(sample_data, lambda, envelope_size = 100, ...)
 \item{envelope_size}{A numeric value specifying the size of envelope on Q-Q plot (default 100).}
 
 \item{...}{not used.}
-
-\item{L}{A numeric value specifying the number of latent vectors included when estimate the Poisson parameter for each matrix entry. This is not useful if a numeric vector is used as input.}
-
-\item{select_by}{A character indicating whether entries should be selected by
-\itemize{
-\item{entry}: {independent matrix entries with Poisson parameter estimates closest to \code{lambda}}
-\item{\code{cell}}: {one particular cell with UMI count mean closest to \code{lambda}}
-\item{\code{gene}}: {one particular gene with UMI count mean closest to \code{lambda}}
-}
-This is not useful if a numeric vector is used as input.}
-
-\item{entry_size}{A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
-This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.}
 }
 \value{
 A ggplot object.

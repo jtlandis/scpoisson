@@ -18,8 +18,3 @@ This function removes unwanted characters from cluster label string
 \details{
 The clust_clean function removes any "-" or "NA" at the end of a string for a given cluster label
 }
-\examples{
-
-clust_clean("1-1-NA")
-
-}

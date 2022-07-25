@@ -41,9 +41,9 @@ diff_gene_list.scppp <- function(data, final_clust_res = NULL,
 #' Use departure matrix from the first step (input should be the departure matrix by running adj_CDF_logit)
 #' @export
 #' @return scppp_de_results
-diff_gene_list.matrix <- function(data, final_clust_res,
-                           clust1 = "1", clust2 = "2",
-                           t = F, ...){
+diff_gene_list.matrix <- function(data, final_clust_res = NULL,
+                                  clust1 = "1", clust2 = "2",
+                                  t = F, ...){
   stopifnot('Clust1 not match the cluster label from HclustDepart' = clust1 %in% final_clust_res$cluster)
   stopifnot('Clust2 not match the cluster label from HclustDepart' = clust2 %in% final_clust_res$cluster)
   test_dat2 <- t(data)
