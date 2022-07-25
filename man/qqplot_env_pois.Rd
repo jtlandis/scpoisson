@@ -33,6 +33,8 @@ This is not useful if a numeric vector is used as input.}
 This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.}
 
 \item{envelope_size}{A numeric value specifying the size of envelope on Q-Q plot (default 100).}
+
+\item{...}{not used.}
 }
 \value{
 A ggplot object.

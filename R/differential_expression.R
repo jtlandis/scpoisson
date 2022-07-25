@@ -9,6 +9,7 @@
 #' @param clust1 One of the cluster label used to make comparison, default "1".
 #' @param clust2 The other cluster label used to make comparison, default "2".
 #' @param t A logical value indicating whether the t-test should be used to make comparison. In general, for large cluster (\eqn{n \ge 30}), the t-test should be used. Otherwise, the Wilcoxon test might be more appropriate.
+#' @param ... not used.
 #'
 #' @return A data frame contains genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).
 #' If the input is an S3 object for class 'scppp', differential expression analysis results will be stored in object scppp under "de_results".
@@ -17,7 +18,7 @@
 #'
 #'
 #' @export
-diff_gene_list <- function(data, test_dat2, final_clust_res = NULL,
+diff_gene_list <- function(data, final_clust_res = NULL,
                            clust1 = "1", clust2 = "2",
                            t = F, ...) UseMethod("diff_gene_list")
 
@@ -25,7 +26,7 @@ diff_gene_list <- function(data, test_dat2, final_clust_res = NULL,
 #' @return scppp
 diff_gene_list.scppp <- function(data, final_clust_res = NULL,
                                  clust1 = "1", clust2 = "2",
-                                 t = F) {
+                                 t = F, ...) {
   stopifnot('Require a clustering result, run HclustDepart() first' = "clust_results" %in% attributes(data)$names)
   final_clust_res <- data[["clust_results"]]$Hclust[[1]]
   stopifnot('Clust1 not match the cluster label from HclustDepart' = clust1 %in% final_clust_res$cluster)
@@ -42,7 +43,7 @@ diff_gene_list.scppp <- function(data, final_clust_res = NULL,
 #' @return scppp_de_results
 diff_gene_list.matrix <- function(data, final_clust_res,
                            clust1 = "1", clust2 = "2",
-                           t = F){
+                           t = F, ...){
   stopifnot('Clust1 not match the cluster label from HclustDepart' = clust1 %in% final_clust_res$cluster)
   stopifnot('Clust2 not match the cluster label from HclustDepart' = clust2 %in% final_clust_res$cluster)
   test_dat2 <- t(data)

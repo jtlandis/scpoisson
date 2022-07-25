@@ -76,7 +76,8 @@ sigp <- function(test_dat, minSize = 10, sim = 100){
 #' @param test_dat A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.
 #' @param maxSplit A numeric value specifying the maximum allowable number of splitting steps (default 10).
 #' @param minSize A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).
-#' @param sim A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100)
+#' @param sim A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100).
+#' @param ... not used.
 #'
 #' @return A list with the following elements:
 #' \itemize{
@@ -100,7 +101,7 @@ HclustDepart <- function(data, maxSplit = 10, minSize = 10, sim = 100, ...) UseM
 
 #' @export
 #' @return scppp
-HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100) {
+HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100, ...) {
 
   test_dat <- data[["data"]]
   data$clust_results[["Hclust"]] <- HclustDepart.matrix(test_dat,
@@ -112,7 +113,7 @@ HclustDepart.scppp <- function(data, maxSplit = 10, minSize = 10, sim = 100) {
 
 #' @export
 #' @return scppp_hclust_results
-HclustDepart.matrix <- function(data, maxSplit = 10, minSize = 10, sim = 100){
+HclustDepart.matrix <- function(data, maxSplit = 10, minSize = 10, sim = 100, ...){
 
   test_dat <- t(data)
   stopifnot('Remove columns with only zero values' = min(rowSums(test_dat)) > 0)

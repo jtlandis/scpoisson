@@ -11,7 +11,9 @@ HclustDepart(data, maxSplit = 10, minSize = 10, sim = 100, ...)
 
 \item{minSize}{A numeric value specifying the minimal allowable cluster size (the number of cells for the smallest cluster, default 10).}
 
-\item{sim}{A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100)}
+\item{sim}{A numeric value specifying the number of simulations during the Monte Carlo simulation procedure for statistical significance test, i.e. n_sim argument when apply sigclust2 (default = 100).}
+
+\item{...}{not used.}
 
 \item{test_dat}{A UMI count matrix with genes as rows and cells as columns or an S3 object for class 'scppp'.}
 }

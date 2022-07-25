@@ -6,7 +6,6 @@
 \usage{
 diff_gene_list(
   data,
-  test_dat2,
   final_clust_res = NULL,
   clust1 = "1",
   clust2 = "2",
@@ -24,6 +23,8 @@ diff_gene_list(
 \item{clust2}{The other cluster label used to make comparison, default "2".}
 
 \item{t}{A logical value indicating whether the t-test should be used to make comparison. In general, for large cluster (\eqn{n \ge 30}), the t-test should be used. Otherwise, the Wilcoxon test might be more appropriate.}
+
+\item{...}{not used.}
 }
 \value{
 A data frame contains genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).

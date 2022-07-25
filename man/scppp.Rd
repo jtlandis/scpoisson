@@ -4,7 +4,7 @@
 \alias{scppp}
 \title{Generate New scppp object}
 \usage{
-scppp(data, sample = c("columns", "rows"), ...)
+scppp(data, sample = c("columns", "rows"))
 }
 \arguments{
 \item{data}{input data - Usually a matrix of counts}

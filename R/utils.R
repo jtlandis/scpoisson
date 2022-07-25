@@ -18,7 +18,7 @@ logit <- function (p) {
   log(p/(1 - p))
 }
 
-#' shorthand to negate infix %in% opperator
+# shorthand to negate infix %in% operator
 `%notin%` <- Negate(`%in%`)
 
 #' Cluster label clean
@@ -36,10 +36,11 @@ logit <- function (p) {
 #' clust_clean("1-1-NA")
 #'
 clust_clean <- function(clust){
-  if(grepl("NA", clust, fixed = TRUE)){
-    gsub("(.*?)(-NA.*)", "\\1", clust)
+  .lgl <- grepl("NA", clust, fixed = TRUE)
+  if(any(.lgl)) {
+    clust[.lgl] <- gsub("(.*?)(-NA.*)", "\\1", clust[.lgl])
   }
-  else(gsub('.{2}$', '', clust))
+  clust
 }
 
 #' Cluster size

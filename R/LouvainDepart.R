@@ -11,6 +11,7 @@
 #' @param pres A numeric value specifying the resolution parameter in Louvain clustering (default 0.8)
 #' @param tsne A logic value specifying whether t-SNE dimension reduction should be applied for visualization.
 #' @param umap A logic value specifying whether UMAP dimension reduction should be applied for visualization.
+#' @param ... not used.
 #'
 #' @return A list with the following elements:
 #' \itemize{
@@ -39,7 +40,7 @@ LouvainDepart <- function(data, pdat = NULL, PCA = T,
 #' @return scppp
 LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
                                      N = 15, pres = 0.8,
-                                     tsne = F, umap = F){
+                                     tsne = F, umap = F, ...){
 
   test_set <- data[["data"]]
   stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
@@ -52,7 +53,7 @@ LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
 #' @return scppp_Lclust_results
 LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
                           N = 15, pres = 0.8,
-                          tsne = F, umap = F){
+                          tsne = F, umap = F, ...){
 
   test_set <- t(data)
   stopifnot('Require a matrix' = is.matrix(test_set))

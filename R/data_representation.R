@@ -64,7 +64,7 @@ adj_CDF_logit <- function(data, change = 1e-10, ...) UseMethod("adj_CDF_logit")
 
 #' @export
 #' @return scppp
-adj_CDF_logit.scppp <- function(data, change = 1e-10) {
+adj_CDF_logit.scppp <- function(data, change = 1e-10, ...) {
 
   test_dat <- data[["data"]]
   data$representation[["departure"]] <- adj_CDF_logit.matrix(test_dat, change)
@@ -73,7 +73,7 @@ adj_CDF_logit.scppp <- function(data, change = 1e-10) {
 
 #' @export
 #' @return scppp_departure
-adj_CDF_logit.matrix <- function(data, change = 1e-10){
+adj_CDF_logit.matrix <- function(data, change = 1e-10, ...){
 
   test_set <- data
   stopifnot('Require a matrix as input' = is.matrix(test_set))

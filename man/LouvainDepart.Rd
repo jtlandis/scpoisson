@@ -29,6 +29,8 @@ LouvainDepart(
 \item{tsne}{A logic value specifying whether t-SNE dimension reduction should be applied for visualization.}
 
 \item{umap}{A logic value specifying whether UMAP dimension reduction should be applied for visualization.}
+
+\item{...}{not used.}
 }
 \value{
 A list with the following elements:

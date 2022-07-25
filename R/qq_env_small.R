@@ -268,6 +268,7 @@ nboot_small <- function(x, lambda, R) {
 #' @param entry_size A numeric value specifying the number of entries used to compare with the theoretical Poisson distribution.
 #' This is not useful if a numeric vector is used as input, or the entries are selected by cell or gene.
 #' @param envelope_size A numeric value specifying the size of envelope on Q-Q plot (default 100).
+#' @param ... not used.
 #'
 #' @return A ggplot object.
 #'
@@ -288,7 +289,7 @@ qqplot_env_pois <- function(sample_data, lambda, L = 10,
 }
 
 #' @export
-qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100){
+qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100, ...){
 
   test_raw <- sample_data
 
@@ -337,7 +338,7 @@ qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100){
 qqplot_env_pois.scppp <- function(scppp_obj, lambda,
                                   L = 10,
                                   select_by = "entry",
-                                  entry_size = 200, envelope_size = 100){
+                                  entry_size = 200, envelope_size = 100, ...){
   test_data <- scppp_obj[["data"]]
   if(is.vector(test_data) && is.atomic(test_data)){
     qqplot_env_pois.numeric(test_data, lambda, envelope_size)
