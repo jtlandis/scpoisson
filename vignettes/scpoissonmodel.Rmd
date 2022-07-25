@@ -2,12 +2,8 @@
 title: "A new Poisson probability paradigm for single cell RNA-seq clustering"
 date: "`r Sys.Date()`"
 author: "Yue Pan"
-output:
-  html_document:
-    number_sections: yes
-    toc: yes
-    toc_float: yes
-vignette: |
+output: rmarkdown::html_vignette
+vignette: >
   %\VignetteIndexEntry{A new Poisson probability paradigm for single cell RNA-seq clustering}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
@@ -25,7 +21,6 @@ Then we propose using model departure as a novel data representation, which is a
 
 ```{r setup}
 library(scpoisson)
-library(here)
 library(dplyr)
 library(ggplot2)
 ```

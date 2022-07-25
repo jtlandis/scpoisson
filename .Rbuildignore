@@ -4,3 +4,5 @@
 ^\.Rproj\.user$
 ^\.github$
 ^LICENSE\.md$
+^README.Rmd$
+^README_files$

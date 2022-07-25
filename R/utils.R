@@ -431,7 +431,7 @@ shc_test <- function(x, metric = "euclidean", vecmet = NULL, matmet = NULL,
 
   ##obtain clustering solution
   hc_isim <- .cluster_shc(x, metric, matmet, linkage, l)
-  split <- cutree(hc_isim, k=2)
+  split <- stats::cutree(hc_isim, k=2)
 
   ##row vector containing cluster indices
   ci_isim <- matrix(-1, nrow=1, ncol=n_ci)
