@@ -199,7 +199,31 @@ new_quantile_pois <- function(data, lambda){
 #'
 #' @return A data frame contains simulated data and corresponding simulation index.
 
-
+#' Random sample generation function to generate sets of samples from theoretical Poisson distribution.
+#'
+#' nboot_small returns a data frame with generate sets of samples and simulation index.
+#'
+#' This is a function used to simulate a given number sets of samples from a theoretical Poisson distribution
+#' that match input samples on sample size and sample mean (or theoretical Poisson parameter).
+#' Plotting these as envelopes in Q-Q plot shows the variability in shapes we can expect when
+#' sampling from the theoretical Poisson distribution.
+#'
+#' @param x a numeric vector of sampled data points to comapre with theoretical Poisson.
+#' @param lambda a numeric value for mean of theoretical Poisson.
+#' @param R a numeric value for mean of theoretical Poisson.
+#'
+#' @return a numeric vector of number of simulation sets that match input samples on sample size
+#' and sample mean (or theoretical Poisson parameter).
+#'
+nboot_small <- function(x, lambda, R) {
+  n <- length(x)
+  do.call(rbind,
+          lapply(1 : R,
+                 function(i) {
+                   xx <- sort(rpois(n, lambda))
+                   data.frame(value = xx, sim = i)
+                 }))
+}
 
 #' Q-Q plot comparing samples with a theoretical Poisson distribution
 #'
