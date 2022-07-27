@@ -31,5 +31,4 @@ adj_CDF_logit(test_set)
 # scppp object as input
 adj_CDF_logit(scppp(test_set))
 
-
 }

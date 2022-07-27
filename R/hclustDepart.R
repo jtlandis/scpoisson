@@ -18,10 +18,6 @@
 #' \item{\code{clust_dat}}: {a matrix of data representation used as input for hierarchical clustering}
 #' }
 #'
-#' @examples
-#'
-#' test_set <- matrix(rpois(500, 0.5), nrow = 10)
-#' para_est_new(test_set)
 #'
 #' @references
 #' \insertRef{kimes2017statistical}{scpoisson}

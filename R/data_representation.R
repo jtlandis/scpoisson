@@ -15,7 +15,12 @@
 #'
 #' @return A numeric vector containing parameter estimates from overall offset (first element), gene effect (same order as rows) and cell effect (same order as columns).
 #'
+#' @examples
+#' # Matrix as input
+#' test_set <- matrix(rpois(500, 0.5), nrow = 10)
+#' para_est_new(test_set)
 #'
+#' @export
 para_est_new <- function(test_set){
 
   stopifnot('Remove columns with only zero values' = min(colSums(test_set)) > 0)
@@ -54,7 +59,6 @@ para_est_new <- function(test_set){
 #' adj_CDF_logit(test_set)
 #' # scppp object as input
 #' adj_CDF_logit(scppp(test_set))
-#'
 #'
 #' @export
 adj_CDF_logit <- function(data, change = 1e-10, ...) UseMethod("adj_CDF_logit")

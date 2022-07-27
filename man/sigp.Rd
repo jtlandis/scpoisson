@@ -30,12 +30,6 @@ This function returns a list with elements mainly generated from sigclust2.
 This is a function used to calculate the significance level of the first split from hierarchical clustering
 based on euclidean distance and Ward's linkage.
 }
-\examples{
-
-test_set <- matrix(rpois(500, 0.5), nrow = 10)
-para_est_new(test_set)
-
-}
 \references{
 \insertRef{kimes2017statistical}{scpoisson}
 \insertRef{Rclusterpp}{scpoisson}
