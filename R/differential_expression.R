@@ -69,7 +69,7 @@ diff_gene_list.matrix <- function(data, final_clust_res = NULL,
 
   if(!t){
     k <- dat_long3 %>%
-      dplyr::group_by(variable, clust_test) %>%
+      dplyr::group_by(.data$variable, .data$clust_test) %>%
       tidyr::nest() %>%
       tidyr::spread(key = clust_test, value = data) %>%
       dplyr::mutate(

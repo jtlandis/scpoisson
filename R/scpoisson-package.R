@@ -18,5 +18,6 @@
 #' @importFrom purrr pmap
 #' @importFrom purrr reduce
 #' @importFrom Rdpack reprompt
+#' @import stats
 ## usethis namespace: end
 NULL

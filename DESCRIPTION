@@ -18,8 +18,10 @@ Suggests:
     renv, 
     testthat (>= 3.0.0),
     vdiffr,
-    markdown,
-    knitr
+    rmarkdown,
+    knitr,
+    qpdf
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Imports: 
     ggplot2,
