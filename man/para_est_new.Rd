@@ -25,9 +25,3 @@ and \eqn{\beta} is a vector with the same length as the number of cells.
 The order of elements in vectors \eqn{\alpha} or \eqn{\beta} is the same as rows (genes) or
 cells (columns) from input data. Be sure to remove cells/genes with all zeros.
 }
-\examples{
-
-test_set <- matrix(rpois(500, 0.5), nrow = 10)
-para_est_new(test_set)
-
-}

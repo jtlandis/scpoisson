@@ -15,10 +15,6 @@
 #'
 #' @return A numeric vector containing parameter estimates from overall offset (first element), gene effect (same order as rows) and cell effect (same order as columns).
 #'
-#' @examples
-#'
-#' test_set <- matrix(rpois(500, 0.5), nrow = 10)
-#' para_est_new(test_set)
 #'
 para_est_new <- function(test_set){
 

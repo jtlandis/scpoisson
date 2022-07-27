@@ -36,3 +36,7 @@ This function returns a data frame with differential expression analysis results
 \details{
 This is a function used to find deferentially expressed genes between two clusters.
 }
+\examples{
+
+
+}
