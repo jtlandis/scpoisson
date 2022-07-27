@@ -30,12 +30,3 @@ point in one sample but no corresponding original data point in another sample,
 apply a linear interpolation. So the common quantile values after interpolation
 should have unique points the same as unique quantile points from either sample.
 }
-\examples{
-
-P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
-dfp <- new_quantile(P, "P")
-dfq <- new_quantile(Q, "Q")
-df_tq <- qq_interpolation(dfp, dfq, "P", "Q")
-
-}

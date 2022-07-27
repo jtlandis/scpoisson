@@ -8,9 +8,6 @@
 #'
 #' @return a numeric value transformed to the real line
 #'
-#' @examples
-#'
-#' logit(0.5)
 #'
 logit <- function (p) {
   #, min = 0, max = 1
@@ -70,13 +67,6 @@ cluster_size <- function(test_dat){
 #' versioning of plots.
 #'
 #' @return list that can be added to a ggplot object
-#'
-#' @examples
-#'
-#' p <- ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Species)) + geom_point()
-#' p + theme_dirk()
-#' p + labs(title = "Even Larger Than Default") + theme_dirk(30)
-#' p + theme_dirk(time_stamp = TRUE)
 #'
 #'
 theme_dirk <- function(base_size = 22,

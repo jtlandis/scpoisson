@@ -31,12 +31,3 @@ list that can be added to a ggplot object
 \description{
 This function generates ggplot object with theme elements that Dirk appreciates on his ggplots
 }
-\examples{
-
-p <- ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Species)) + geom_point()
-p + theme_dirk()
-p + labs(title = "Even Larger Than Default") + theme_dirk(30)
-p + theme_dirk(time_stamp = TRUE)
-
-
-}

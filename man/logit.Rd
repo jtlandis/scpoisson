@@ -18,8 +18,3 @@ This function appliess logit transformation for a given probability
 \details{
 The logit function transforms a probability within the range of 0 and 1 to the real line
 }
-\examples{
-
-logit(0.5)
-
-}

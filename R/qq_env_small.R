@@ -12,11 +12,6 @@
 #'
 #' @return A data frame contains the corresponding probability from cumulative distribution function (CDF), sample name, and corresponding respective quantiles.
 #'
-#' @examples
-#'
-#' P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-#' new_quantile(P, "P")
-#'
 #'
 new_quantile <- function(data, sample){
 
@@ -52,14 +47,6 @@ new_quantile <- function(data, sample){
 #' @param sample_id A character to denote the object data frame.
 #'
 #' @return A data frame contains CDF, the sample name, and the corresponding quantiles.
-#'
-#' @examples
-#'
-#' P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-#' Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
-#' dfp <- new_quantile(P, "P")
-#' dfq <- new_quantile(Q, "Q")
-#' df_tq <- interpolate(dfp, dfq, "P")
 #'
 #'
 interpolate <- function(df, reference, sample_id){
@@ -98,13 +85,6 @@ interpolate <- function(df, reference, sample_id){
 #' corresponding quanitles from the first sample (\code{dfp}),
 #' and corresponding quanitles from the second sample (\code{dfq}).
 #'
-#' @examples
-#'
-#' P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-#' Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
-#' dfp <- new_quantile(P, "P")
-#' dfq <- new_quantile(Q, "Q")
-#' df_tq <- qq_interpolation(dfp, dfq, "P", "Q")
 #'
 qq_interpolation <- function(dfp, dfq, sample1, sample2){
 
@@ -155,13 +135,7 @@ qq_interpolation <- function(dfp, dfq, sample1, sample2){
 #' @return A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding qunatiles
 #' from the other sample on the vertical axis.
 #'
-#' @examples
-#'
-#' P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-#' Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
-#' qqplot_small_test(P, Q, "P", "Q")
-#'
-#' @export
+
 qqplot_small_test <- function(P, Q, sample1, sample2){
 
   dfp <- new_quantile(P, sample1)
@@ -189,10 +163,6 @@ qqplot_small_test <- function(P, Q, sample1, sample2){
 #'
 #' @return A data frame contains CDF probability and corresponding quantiles from the theoretical Poisson distribution.
 #'
-#' @examples
-#'
-#' P <- rpois(100, 3)
-#' new_quantile_pois(P, 3)
 #'
 new_quantile_pois <- function(data, lambda){
 
@@ -228,19 +198,8 @@ new_quantile_pois <- function(data, lambda){
 #' @param R A numeric value specifying the number of simulated sets.
 #'
 #' @return A data frame contains simulated data and corresponding simulation index.
-#'
-#' @examples
-#' nboot_small(rpois(100, 3), 3, 200)
-#'
-nboot_small <- function(x, lambda, R) {
-  n <- length(x)
-  do.call(rbind,
-          lapply(1 : R,
-                 function(i) {
-                   y <- sort(rpois(n, lambda))
-                   data.frame(value = y, sim = i)
-                 }))
-}
+
+
 
 #' Q-Q plot comparing samples with a theoretical Poisson distribution
 #'
@@ -265,13 +224,10 @@ nboot_small <- function(x, lambda, R) {
 #' @references
 #' \insertRef{glmpca}{scpoisson}
 #'
-#' @examples
-#'
-#' qqplot_env_pois(rpois(200, 3), 3, 100)
-#'
 #' @import ggplot2
 #'
 #' @export
+#'
 qqplot_env_pois <- function(sample_data, lambda, envelope_size = 100, ...) {
   UseMethod("qqplot_env_pois")
 }

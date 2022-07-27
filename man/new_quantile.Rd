@@ -23,10 +23,3 @@ Define both \eqn{p_{-1} = 0} and \eqn{q_{-1} = 0}.
 Replace the point mass at each integer \eqn{z} by a bar on the interval \eqn{[z – \frac{1}{2}, z+ \frac{1}{2}]}
 with height \eqn{P(X = z)}. This is a more "continuous" approximation of quantiles in this case.
 }
-\examples{
-
-P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-new_quantile(P, "P")
-
-
-}

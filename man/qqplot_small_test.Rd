@@ -26,10 +26,3 @@ This function returns a ggplot object used to visualize quantiles comparing dist
 This is a function for quantile-quantile plot comapring comparing samples from two discrete distributions
 after \emph{continuity correction} and linear interpolation
 }
-\examples{
-
-P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
-qqplot_small_test(P, Q, "P", "Q")
-
-}

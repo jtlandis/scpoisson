@@ -22,9 +22,3 @@ from cumulative distribution function (CDF) and corresponding quantiles.
 This is a function developed to get corresponding quantiles from theoretical Poisson distribution.
 The data points ranges from 0 to maximum value of sampled data used to compare with the theoretical Poisson distribution.
 }
-\examples{
-
-P <- rpois(100, 3)
-new_quantile_pois(P, 3)
-
-}

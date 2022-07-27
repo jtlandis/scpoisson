@@ -27,13 +27,3 @@ if there are any CDF values in reference but not in object data frame,
 do the linear interpolation and insert both CDF values and respective quantiles
 to the original object data frame.
 }
-\examples{
-
-P <- sample(0:2,1000, replace=TRUE, prob=c(1/3, 1/2, 1/6))
-Q <- sample(0:1,1000, replace=TRUE, prob=c(2/3, 1/3))
-dfp <- new_quantile(P, "P")
-dfq <- new_quantile(Q, "Q")
-df_tq <- interpolate(dfp, dfq, "P")
-
-
-}

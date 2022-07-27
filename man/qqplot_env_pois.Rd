@@ -2,7 +2,7 @@
 % Please edit documentation in R/qq_env_small.R
 \name{qqplot_env_pois}
 \alias{qqplot_env_pois}
-\title{Q-Q plot comparing samples with a theoretical Poisson distribution}
+\title{Random sample generation function to generate sets of samples from theoretical Poisson distribution.}
 \usage{
 qqplot_env_pois(sample_data, lambda, envelope_size = 100, ...)
 }
@@ -14,14 +14,17 @@ qqplot_env_pois(sample_data, lambda, envelope_size = 100, ...)
 \item{envelope_size}{A numeric value specifying the size of envelope on Q-Q plot (default 100).}
 
 \item{...}{not used.}
+
+\item{x}{A numeric vector of sampled data points to compare with theoretical Poisson.}
+
+\item{R}{A numeric value specifying the number of simulated sets.}
 }
 \value{
-A ggplot object.
-}
-\description{
+A data frame contains simulated data and corresponding simulation index.
+Q-Q plot comparing samples with a theoretical Poisson distribution
+
 This function returns a Q-Q plot with envelope using a more "continuous" approximation of quantiles.
-}
-\details{
+
 This is a function for Q-Q envelope plot used to compare whether given sample data points come from the
 theoretical Poisson distribution.  By simulating repeated samples of the same size from the candidate
 theoretical distribution, and overlaying the envelope on the same figure, it provides a feeling of
@@ -30,11 +33,17 @@ understanding the natural variation from the theoretical distribution.
 If an S3 object for class 'scppp' is used as input and the stored result under "data" is a matrix,
 The GLM-PCA algorithm will be applied to estimate the Poisson parameter for each matrix entry.
 Then a specific number of entries will be selected as sample data points to compare with the theoretical Poisson distribution.
+
+A ggplot object.
 }
-\examples{
-
-qqplot_env_pois(rpois(200, 3), 3, 100)
-
+\description{
+This function returns a data frame with generated sets of samples and simulation index.
+}
+\details{
+This is a function used to simulate a given number sets of samples from a theoretical Poisson distribution
+that match input samples on sample size and sample mean (or theoretical Poisson parameter).
+Plotting these as envelopes in Q-Q plot shows the variability in shapes we can expect when
+sampling from the theoretical Poisson distribution.
 }
 \references{
 \insertRef{glmpca}{scpoisson}
