@@ -38,7 +38,6 @@ diff_gene_list.scppp <- function(data, final_clust_res = NULL,
   return(data)
 }
 
-#' Use departure matrix from the first step (input should be the departure matrix by running adj_CDF_logit)
 #' @export
 #' @return scppp_de_results
 diff_gene_list.matrix <- function(data, final_clust_res = NULL,
