@@ -17,5 +17,6 @@
 #' @importFrom purrr map2
 #' @importFrom purrr pmap
 #' @importFrom purrr reduce
+#' @importFrom Rdpack reprompt
 ## usethis namespace: end
 NULL
