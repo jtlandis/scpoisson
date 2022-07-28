@@ -13,7 +13,7 @@ logit(p)
 a numeric value transformed to the real line
 }
 \description{
-This function appliess logit transformation for a given probability
+This function applies logit transformation for a given probability
 }
 \details{
 The logit function transforms a probability within the range of 0 and 1 to the real line

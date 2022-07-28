@@ -13,5 +13,5 @@ cluster_size(test_dat)
 a numeric value with number of cells to cluster
 }
 \description{
-This function calcualtes the numer of elements in current cluster
+This function calculates the number of elements in current cluster
 }

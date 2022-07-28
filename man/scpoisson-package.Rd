@@ -6,14 +6,14 @@
 \alias{scpoisson-package}
 \title{scpoisson: Single Cell Poisson Probability Paradigm}
 \description{
-What the package does (one paragraph).
+This package is developed to visualize the Poissoneity of scRNA-seq UMI data, and explore cell clustering based on model departure as a novel data representation.
 }
 \author{
-\strong{Maintainer}: Yue Pan \email{yue221@live.unc.edu}
+\strong{Maintainer}: Yue Pan \email{yuep027@gmail.com}
 
 Authors:
 \itemize{
-  \item Justin Landis \email{jtlandis314@gmail.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+  \item Justin Landis \email{jtlandis314@gmail.com} (\href{https://orcid.org/0000-0001-5501-4934}{ORCID})
   \item Dirk Dittmer \email{dirk_dittmer@med.unc.edu}
   \item James S. Marron \email{marron@unc.edu}
   \item Di Wu \email{did@email.unc.edu}

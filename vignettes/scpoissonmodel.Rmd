@@ -71,7 +71,7 @@ table(clust_res[,2])
 
 ```
 
-The model departure data representation can also be fitted into any other clustering pipeline. Another option contained in this package is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. In general, this is a faster clustering algorithm to do clustering. However, it requires carefully tunning about resolution parameter, which can lead to different clustering results for the same data set. In this simple case, keeping the default resolution parameter (0.8) gives the correct clustering results as known cell lines.
+The model departure data representation can also be fitted into any other clustering pipeline. Another option contained in this package is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. In general, this is a faster clustering algorithm to do clustering. However, it requires carefully tuning about resolution parameter, which can lead to different clustering results for the same data set. In this simple case, keeping the default resolution parameter (0.8) gives the correct clustering results as known cell lines.
 
 The clustering results are also stored in object scppp under "clust_results". You can refer to "Lclust" under that for more details. 
 

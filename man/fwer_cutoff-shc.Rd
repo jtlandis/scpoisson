@@ -3,7 +3,7 @@
 \name{fwer_cutoff-shc}
 \alias{fwer_cutoff-shc}
 \alias{fwer_cutoff.shc}
-\title{get FWER cutoffs for shc oject}
+\title{get FWER cutoffs for shc object}
 \usage{
 \method{fwer_cutoff}{shc}(obj, alpha, ...)
 }
@@ -15,7 +15,7 @@
 \item{...}{other parameters to be used by the function}
 }
 \description{
-get FWER cutoffs for shc oject
+get FWER cutoffs for shc object
 }
 \author{
 Patrick Kimes

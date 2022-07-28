@@ -21,7 +21,7 @@ This function returns a data frame with interpolated data points.
 }
 \details{
 This is a function developed to do linear interpolation for corresponding probability
-from empirical cumulative distribution function (CDF) and corresponding quanitles.
+from empirical cumulative distribution function (CDF) and corresponding quantiles.
 Given a reference data frame and a data frame needed to do interpolation,
 if there are any CDF values in reference but not in object data frame,
 do the linear interpolation and insert both CDF values and respective quantiles

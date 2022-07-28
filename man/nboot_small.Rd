@@ -7,7 +7,7 @@
 nboot_small(x, lambda, R)
 }
 \arguments{
-\item{x}{a numeric vector of sampled data points to comapre with theoretical Poisson.}
+\item{x}{a numeric vector of sampled data points to compare with theoretical Poisson.}
 
 \item{lambda}{a numeric value for mean of theoretical Poisson.}
 

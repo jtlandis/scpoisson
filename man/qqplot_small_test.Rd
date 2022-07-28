@@ -16,13 +16,13 @@ qqplot_small_test(P, Q, sample1, sample2)
 \item{sample2}{A character to denote sample name of the other distribution \code{Q} generated from.}
 }
 \value{
-A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding qunatiles
+A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding quantiles
 from the other sample on the vertical axis.
 }
 \description{
 This function returns a ggplot object used to visualize quantiles comparing distributions of two samples.
 }
 \details{
-This is a function for quantile-quantile plot comapring comparing samples from two discrete distributions
+This is a function for quantile-quantile plot comparing comparing samples from two discrete distributions
 after \emph{continuity correction} and linear interpolation
 }

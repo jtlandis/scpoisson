@@ -1,6 +1,6 @@
 #' Logit transformation
 #'
-#' This function appliess logit transformation for a given probability
+#' This function applies logit transformation for a given probability
 #'
 #' The logit function transforms a probability within the range of 0 and 1 to the real line
 #'
@@ -39,7 +39,7 @@ clust_clean <- function(clust){
 
 #' Cluster size
 #'
-#' This function calcualtes the numer of elements in current cluster
+#' This function calculates the number of elements in current cluster
 #'
 #' @param test_dat a matrix or data frame with cells to cluster as rows
 #'
@@ -58,7 +58,7 @@ cluster_size <- function(test_dat){
 #'
 #' This function generates ggplot object with theme elements that Dirk appreciates on his ggplots
 #'
-#' @param base_size base font size, givin in pts.
+#' @param base_size base font size, given in pts.
 #' @param base_family base font family
 #' @param base_line_size base size for line elements
 #' @param base_rect_size base size for rect elements
@@ -566,7 +566,7 @@ fwer_cutoff <- function(obj, ...) {
 
 
 
-#' get FWER cutoffs for shc oject
+#' get FWER cutoffs for shc object
 #'
 #' @param obj \code{shc} object
 #' @param alpha numeric value specifying level

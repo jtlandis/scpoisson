@@ -36,7 +36,7 @@ new_quantile <- function(data, sample){
 #' This function returns a data frame with interpolated data points.
 #'
 #' This is a function developed to do linear interpolation for corresponding probability
-#' from empirical cumulative distribution function (CDF) and corresponding quanitles.
+#' from empirical cumulative distribution function (CDF) and corresponding quantiles.
 #' Given a reference data frame and a data frame needed to do interpolation,
 #' if there are any CDF values in reference but not in object data frame,
 #' do the linear interpolation and insert both CDF values and respective quantiles
@@ -82,8 +82,8 @@ interpolate <- function(df, reference, sample_id){
 #' @param sample2 A character to denote sample name of distribution used to generate \code{dfq}.
 #'
 #' @return A data frame contains corresponding probability from cumulative distribution function (CDF),
-#' corresponding quanitles from the first sample (\code{dfp}),
-#' and corresponding quanitles from the second sample (\code{dfq}).
+#' corresponding quantiles from the first sample (\code{dfp}),
+#' and corresponding quantiles from the second sample (\code{dfq}).
 #'
 #'
 qq_interpolation <- function(dfp, dfq, sample1, sample2){
@@ -124,7 +124,7 @@ qq_interpolation <- function(dfp, dfq, sample1, sample2){
 #'
 #' This function returns a ggplot object used to visualize quantiles comparing distributions of two samples.
 #'
-#' This is a function for quantile-quantile plot comapring comparing samples from two discrete distributions
+#' This is a function for quantile-quantile plot comparing comparing samples from two discrete distributions
 #' after \emph{continuity correction} and linear interpolation
 #'
 #' @param P A numeric vector from one sample.
@@ -132,7 +132,7 @@ qq_interpolation <- function(dfp, dfq, sample1, sample2){
 #' @param sample1 A character to denote sample name of one distribution \code{P} generated from.
 #' @param sample2 A character to denote sample name of the other distribution \code{Q} generated from.
 #'
-#' @return A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding qunatiles
+#' @return A ggplot object. Q-Q plot with continuity correction. Quantiles from one sample on the horizontal axis and corresponding quantiles
 #' from the other sample on the vertical axis.
 #'
 
@@ -208,7 +208,7 @@ new_quantile_pois <- function(data, lambda){
 #' Plotting these as envelopes in Q-Q plot shows the variability in shapes we can expect when
 #' sampling from the theoretical Poisson distribution.
 #'
-#' @param x a numeric vector of sampled data points to comapre with theoretical Poisson.
+#' @param x a numeric vector of sampled data points to compare with theoretical Poisson.
 #' @param lambda a numeric value for mean of theoretical Poisson.
 #' @param R a numeric value for mean of theoretical Poisson.
 #'

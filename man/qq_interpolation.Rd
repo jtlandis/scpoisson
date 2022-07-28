@@ -17,8 +17,8 @@ qq_interpolation(dfp, dfq, sample1, sample2)
 }
 \value{
 A data frame contains corresponding probability from cumulative distribution function (CDF),
-corresponding quanitles from the first sample (\code{dfp}),
-and corresponding quanitles from the second sample (\code{dfq}).
+corresponding quantiles from the first sample (\code{dfp}),
+and corresponding quantiles from the second sample (\code{dfq}).
 }
 \description{
 This function returns a data frame with paired quantiles in two samples after interpolation.
