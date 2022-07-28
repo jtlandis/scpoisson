@@ -60,7 +60,7 @@ LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
 
   test_set <- t(data)
   stopifnot('Require a matrix' = is.matrix(test_set))
-  sdat <- as(as.matrix(t(test_set)), "dgCMatrix")
+  sdat <- methods::as(as.matrix(t(test_set)), "dgCMatrix")
   sdata <- Seurat::CreateSeuratObject(counts = sdat)
   if(is.null(pdat)){
     pdat <- adj_CDF_logit(test_set)
@@ -97,16 +97,16 @@ LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
     graph.name <- paste0("scppp_", names(neighbor.graphs))
     for (ii in seq_along(graph.name)) {
       if (inherits(x = neighbor.graphs[[ii]], what = "Graph")) {
-        DefaultAssay(object = neighbor.graphs[[ii]]) <- "scppp"
+        Seurat::`DefaultAssay<-`(object = neighbor.graphs[[ii]], "scppp")
       }
       sdata[[graph.name[[ii]]]] <- neighbor.graphs[[ii]]
     }
     sdata <- Seurat::FindClusters(sdata, graph.name = "scppp_snn", resolution = pres)
     if(umap){
-      sdata[["scppp_umap"]] <- RunUMAP(pdat[, 1:N], assay = "scppp")
+      sdata[["scppp_umap"]] <- Seurat::RunUMAP(pdat[, 1:N], assay = "scppp")
     }
     if(tsne){
-      sdata[["scppp_tsne"]] <- RunTSNE(pdat[, 1:N], assay = "scppp")
+      sdata[["scppp_tsne"]] <- Seurat::RunTSNE(pdat[, 1:N], assay = "scppp")
     }
 
   }

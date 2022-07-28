@@ -21,7 +21,7 @@ new_quantile <- function(data, sample){
 
   dfp <- data.frame(value = data)
   dfp <- dfp %>%
-    dplyr::do(data.frame(., fval = ecdf(.$value)(.$value)))
+    dplyr::do(data.frame(.data, fval = ecdf(.data$value)(.data$value)))
   dfp <- dfp %>% distinct()
   dfp <- dfp[with(dfp, order(fval)),]
   dfp$cat <- sample
@@ -143,8 +143,8 @@ qqplot_small_test <- function(P, Q, sample1, sample2){
 
   df_tq <- qq_interpolation(dfp, dfq, sample1, sample2)
   ggplot(data = df_tq) +
-    geom_line(data = df_tq, aes(x=value_new_q, y=value_new_p)) +
-    geom_point(data = df_tq, aes(x=value_new_q, y=value_new_p)) +
+    geom_line(data = df_tq, aes(x=.data$value_new_q, y=.data$value_new_p)) +
+    geom_point(data = df_tq, aes(x=.data$value_new_q, y=.data$value_new_p)) +
     geom_abline(intercept = 0, slope = 1, color = "red") +
     xlab("Q") + ylab("P") +
     coord_fixed(ratio = 1)
@@ -289,10 +289,10 @@ qqplot_env_pois.numeric <- function(sample_data, lambda, envelope_size = 100, ..
   max <- max(df_all$value_new_q, df_all$value_new_p, test_all_qq$value_new_q, test_all_qq$value_new_p)
   #size <- 18
   p <- ggplot(data = df_all) +
-    geom_line(aes(x = value_new_q, y=value_new_p, group = sim),
+    geom_line(aes(x = .data$value_new_q, y=.data$value_new_p, group = .data$sim),
               color = "gray", size = 1.2) +
-    geom_line(data = test_all_qq, aes(x = value_new_q, y = value_new_p, color = source), size = 1.2) +
-    geom_point(data = test_all_qq, aes(x = value_new_q, y = value_new_p, color = source), size = 1.5) +
+    geom_line(data = test_all_qq, aes(x = .data$value_new_q, y = .data$value_new_p, color = source), size = 1.2) +
+    geom_point(data = test_all_qq, aes(x = .data$value_new_q, y = .data$value_new_p, color = source), size = 1.5) +
     scale_color_manual(values=c("#E69F00")) +
     geom_abline(intercept = 0, slope = 1, color = "black", linetype = "dashed") +
     #coord_cartesian(xlim =c((dfp$value[2]-1), max(dfp$value + 1)), ylim = c((dfp$value[2]-1), max(dfp$value + 1))) +
@@ -340,7 +340,7 @@ qqplot_env_pois.scppp <- function(sample_data, lambda, envelope_size = 100,
         index <- which(measure == min(measure))
 
         cell <- rownames(test_dat)[index]
-        cell_sd <- rowSds(test_dat)[index]
+        cell_sd <- matrixStats::rowSds(test_dat)[index]
         select_cell <- cell[which(cell_sd == max(cell_sd))]
         return(test_dat[which(rownames(test_dat) == select_cell[1]), ])
       }
@@ -351,7 +351,7 @@ qqplot_env_pois.scppp <- function(sample_data, lambda, envelope_size = 100,
         index <- which(measure == min(measure))
 
         gene <- colnames(test_dat)[index]
-        gene_sd <- colSds(test_dat)[index]
+        gene_sd <- matrixStats::colSds(test_dat)[index]
         select_gene <- gene[which(gene_sd == max(gene_sd))]
         return(test_dat[, which(colnames(test_dat) == select_gene[1])])
       }

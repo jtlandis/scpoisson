@@ -14,9 +14,6 @@
 #' @return A data frame contains genes (ranked by decreasing order of mean difference), and associated statistics (p-values, FDR adjusted p-values, etc.).
 #' If the input is an S3 object for class 'scppp', differential expression analysis results will be stored in object scppp under "de_results".
 #'
-#' @examples
-#'
-#'
 #' @export
 diff_gene_list <- function(data, final_clust_res = NULL,
                            clust1 = "1", clust2 = "2",
@@ -58,39 +55,39 @@ diff_gene_list.matrix <- function(data, final_clust_res = NULL,
   dat_long3$clust_test <- ifelse(dat_long3$cluster %in% clust1, "A", "B")
 
   fc_df2 <- dat_long3 %>%
-    dplyr::group_by(variable, clust_test) %>%
-    dplyr::summarize(Mean = mean(value, na.rm=TRUE))
+    dplyr::group_by(.data$variable, .data$clust_test) %>%
+    dplyr::summarize(Mean = mean(.data$value, na.rm=TRUE))
 
 
   #fc_df_wide <- reshape2::dcast(fc_df2,  variable ~ clust_test, value.var="Mean")
   fc_df_wide <- fc_df2 %>%
-    tidyr::spread(key = clust_test, value = Mean)
+    tidyr::spread(key = .data$clust_test, value = .data$Mean)
   fc_df_wide$mean_diff <- fc_df_wide$A - fc_df_wide$B
 
   if(!t){
     k <- dat_long3 %>%
       dplyr::group_by(.data$variable, .data$clust_test) %>%
       tidyr::nest() %>%
-      tidyr::spread(key = clust_test, value = data) %>%
+      tidyr::spread(key = .data$clust_test, value = data) %>%
       dplyr::mutate(
-        test = purrr::map2(A, B, ~{wilcox.test(.x$value, .y$value) %>% broom::tidy()}),
-        A = purrr::map(A, nrow),
-        B = purrr::map(B, nrow)
+        test = purrr::map2(.data$A, .data$B, ~{wilcox.test(.x$value, .y$value) %>% broom::tidy()}),
+        A = purrr::map(.data$A, nrow),
+        B = purrr::map(.data$B, nrow)
       ) %>%
-      tidyr::unnest(cols = c(A, B, test))
+      tidyr::unnest(cols = c(.data$A, .data$B, .data$test))
   }
 
   if(t){
     k <- dat_long3 %>%
-      dplyr::group_by(variable, clust_test) %>%
+      dplyr::group_by(.data$variable, .data$clust_test) %>%
       tidyr::nest() %>%
-      tidyr::spread(key = clust_test, value = data) %>%
+      tidyr::spread(key = .data$clust_test, value = data) %>%
       dplyr::mutate(
-        test = purrr::map2(A, B, ~{t.test(.x$value, .y$value) %>% broom::tidy()}),
-        A = purrr::map(A, nrow),
-        B = purrr::map(B, nrow)
+        test = purrr::map2(.data$A, .data$B, ~{t.test(.x$value, .y$value) %>% broom::tidy()}),
+        A = purrr::map(.data$A, nrow),
+        B = purrr::map(.data$B, nrow)
       ) %>%
-      tidyr::unnest(cols = c(A, B, test))
+      tidyr::unnest(cols = c(.data$A, .data$B, .data$test))
   }
 
   fc_df_wide <- merge(fc_df_wide, k, by = "variable")
@@ -99,14 +96,14 @@ diff_gene_list.matrix <- function(data, final_clust_res = NULL,
   fc_df_wide$padj <- p.adjust(fc_df_wide$p.value, "fdr")
   fc_df_wide <- fc_df_wide %>%
     dplyr::rename(clust1_mean = "A.x",
-           clust2_mean = "B.x",
-           clust1_n = "A.y",
-           clust2_n = "B.y")
+                  clust2_mean = "B.x",
+                  clust1_n = "A.y",
+                  clust2_n = "B.y")
   return(fc_df_wide %>%
-           dplyr::select(variable, clust1_mean, clust2_mean, clust1_n, clust2_n,
-                         mean_diff, statistic, p.value, padj, abs_diff) %>%
+           dplyr::select(.data$variable, .data$clust1_mean, .data$clust2_mean, .data$clust1_n, .data$clust2_n,
+                         .data$mean_diff, .data$statistic, .data$p.value, .data$padj, .data$abs_diff) %>%
            #filter(padj < 0.05) %>%
-           arrange(desc(mean_diff)))
+           arrange(desc(.data$mean_diff)))
 }
 
 

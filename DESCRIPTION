@@ -37,7 +37,9 @@ Imports:
     SeuratObject,
     WGCNA,
     broom,
-    stats
+    stats,
+    methods,
+    matrixStats
 RdMacros: Rdpack
 Depends: 
     R (>= 2.10)
