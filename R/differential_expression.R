@@ -50,7 +50,7 @@ diff_gene_list.matrix <- function(data, final_clust_res = NULL,
   dat_long3 <- data.frame(names = rownames(test_dat2), test_dat2)
   #dat_long3 <- reshape2::melt(dat_long3, id.vars=c("names"))
   dat_long3 <- dat_long3 %>%
-    tidyr::gather(variable, value, -names)
+    tidyr::gather("variable", "value", -names)
   dat_long3 <- merge(dat_long3, final_clust_res, by = "names")
   dat_long3$clust_test <- ifelse(dat_long3$cluster %in% clust1, "A", "B")
 
