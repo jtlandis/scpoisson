@@ -8,7 +8,9 @@ Authors@R: c(
     person("Dirk", "Dittmer", email = "dirk_dittmer@med.unc.edu", role = "aut"),
     person("James S.", "Marron", role = "aut", email = "marron@unc.edu"),
     person("Di", "Wu", role = "aut", email = "did@email.unc.edu"))
-Description: What the package does (one paragraph).
+Description: This package is developed to visualize the Poissoneity of scRNA-seq
+  UMI data, and explore cell clustering based on model departure as a novel data
+  representation. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -26,7 +28,6 @@ Config/testthat/edition: 3
 Imports: 
     ggplot2,
     glmpca,
-    SingleCellExperiment,
     Seurat,
     magrittr,
     dplyr,
