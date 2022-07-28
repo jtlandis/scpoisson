@@ -2,9 +2,9 @@ Package: scpoisson
 Title: Single Cell Poisson Probability Paradigm
 Version: 0.0.1
 Authors@R: c(
-    person("Yue", "Pan", email = "yue221@live.unc.edu", role = c("aut", "cre")),
+    person("Yue", "Pan", email = "yuep027@gmail.com", role = c("aut", "cre")),
     person("Justin", "Landis", email = "jtlandis314@gmail.com", role = c("aut"),
-           comment = c(ORCID = "YOUR-ORCID-ID")),
+           comment = c(ORCID = "0000-0001-5501-4934")),
     person("Dirk", "Dittmer", email = "dirk_dittmer@med.unc.edu", role = "aut"),
     person("James S.", "Marron", role = "aut", email = "marron@unc.edu"),
     person("Di", "Wu", role = "aut", email = "did@email.unc.edu"))
