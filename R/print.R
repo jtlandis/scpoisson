@@ -7,6 +7,7 @@ print.scppp <- function(x, ...) {
 
 #' get example data
 #' @param x data set to choose
+#' @return A data set from example data
 #' @export
 get_example_data <- function(x = c("p5","p56")) {
   switch (x[1],

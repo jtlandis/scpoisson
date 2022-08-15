@@ -36,14 +36,14 @@
 #'
 #'
 #' @export
-LouvainDepart <- function(data, pdat = NULL, PCA = T,
+LouvainDepart <- function(data, pdat = NULL, PCA = TRUE,
                           N = 15, pres = 0.8,
-                          tsne = F, umap = F, ...) UseMethod("LouvainDepart")
+                          tsne = FALSE, umap = FALSE, ...) UseMethod("LouvainDepart")
 #' @export
 #' @return scppp
-LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
+LouvainDepart.scppp <- function(data, pdat = NULL, PCA = TRUE,
                                      N = 15, pres = 0.8,
-                                     tsne = F, umap = F, ...){
+                                     tsne = FALSE, umap = FALSE, ...){
 
   test_set <- data[["data"]]
   stopifnot('Require a matrix or data frame as input' = is.matrix(test_set))
@@ -54,9 +54,9 @@ LouvainDepart.scppp <- function(data, pdat = NULL, PCA = T,
 }
 #' @export
 #' @return scppp_Lclust_results
-LouvainDepart.matrix <- function(data, pdat = NULL, PCA = T,
+LouvainDepart.matrix <- function(data, pdat = NULL, PCA = TRUE,
                           N = 15, pres = 0.8,
-                          tsne = F, umap = F, ...){
+                          tsne = FALSE, umap = FALSE, ...){
 
   test_set <- t(data)
   stopifnot('Require a matrix' = is.matrix(test_set))

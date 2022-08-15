@@ -8,9 +8,10 @@ Authors@R: c(
     person("Dirk", "Dittmer", email = "dirk_dittmer@med.unc.edu", role = "aut"),
     person("James S.", "Marron", role = "aut", email = "marron@unc.edu"),
     person("Di", "Wu", role = "aut", email = "did@email.unc.edu"))
-Description: Useful to visualize the Poissoneity of scRNA-seq
-  UMI data, and explore cell clustering based on model departure as a novel data
-  representation. 
+Description: Useful to visualize the Poissoneity (an independent Poisson statistical framework, 
+  where each RNA measurement for each cell comes from its own independent Poisson distribution) of 
+  Unique Molecular Identifier (UMI) based single cell RNA sequencing (scRNA-seq) data, and explore 
+  cell clustering based on model departure as a novel data representation. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
