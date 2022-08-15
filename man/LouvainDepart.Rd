@@ -7,11 +7,11 @@
 LouvainDepart(
   data,
   pdat = NULL,
-  PCA = T,
+  PCA = TRUE,
   N = 15,
   pres = 0.8,
-  tsne = F,
-  umap = F,
+  tsne = FALSE,
+  umap = FALSE,
   ...
 )
 }
@@ -37,9 +37,9 @@ A list with the following elements:
 \itemize{
 \item{\code{sdata}}: {a Seurat object}
 \item{\code{tsne_data}}: {a matrix containing t-SNE dimension reduction results,
-with cells as rows, and first two t-SNE dimensions as columns; NULL if \code{tsne = FLASE}.}
+with cells as rows, and first two t-SNE dimensions as columns; NULL if \code{tsne = FALSE}.}
 \item{\code{umap_data}}: {a matrix containing UMAP dimension reduction results,
-with cells as rows, and first two UMAP dimensions as columns; NULL if \code{tsne = FLASE}.}
+with cells as rows, and first two UMAP dimensions as columns; NULL if \code{tsne = FALSE}.}
 \item{\code{res_clust}}: {a data frame contains two columns: names (cell names) and clusters (cluster label)}
 }
 }

@@ -19,8 +19,8 @@ test_that("differential_expression works as expected", {
   # require clustering results
   expect_error(diff_gene_list(scppp(t(counts))))
   # cluster label should match the ones from clustering results
-  expect_error(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2-1", t = F))
-  scppp_obj <- suppressWarnings(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t_test = F))
+  expect_error(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2-1"))
+  scppp_obj <- suppressWarnings(diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2"))
   # columns as as expected
   expect_equal(colnames(scppp_obj[["de_results"]]$Hclust),
                c("variable", "clust1_mean", "clust2_mean", "clust1_n", "clust2_n",

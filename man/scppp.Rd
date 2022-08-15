@@ -11,6 +11,11 @@ scppp(data, sample = c("columns", "rows"))
 
 \item{sample}{by rows or columns}
 }
+\value{
+S3 object for class 'scppp'.
+}
 \description{
-Generate New scppp object
+Define S3 class that stores scRNA-seq data and associated information
+(e.g. model departure representation, cell clustering results) if
+corresponding functions are called.
 }

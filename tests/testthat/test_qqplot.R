@@ -14,6 +14,7 @@ test_that("plot default call works properly", {
   set.seed(1234)
   dat <- matrix(c(rpois(300, 5), rpois(200, 1)), ncol = 20)
   scppp_obj <- scppp(dat, "rows")
+  set.seed(1234)
   p2 <- qqplot_env_pois(scppp_obj, L = 2, lambda = 5)
   expect_s3_class(p2, "ggplot")
   vdiffr::expect_doppelganger("qq-env-plot-matrix", p2)

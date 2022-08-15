@@ -9,6 +9,9 @@ get_example_data(x = c("p5", "p56"))
 \arguments{
 \item{x}{data set to choose}
 }
+\value{
+A data set from example data
+}
 \description{
 get example data
 }

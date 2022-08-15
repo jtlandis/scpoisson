@@ -6,7 +6,7 @@
 \alias{scpoisson-package}
 \title{scpoisson: Single Cell Poisson Probability Paradigm}
 \description{
-This package is developed to visualize the Poissoneity of scRNA-seq UMI data, and explore cell clustering based on model departure as a novel data representation.
+Useful to visualize the Poissoneity (an independent Poisson statistical framework, where each RNA measurement for each cell comes from its own independent Poisson distribution) of Unique Molecular Identifier (UMI) based single cell RNA sequencing (scRNA-seq) data, and explore cell clustering based on model departure as a novel data representation.
 }
 \author{
 \strong{Maintainer}: Yue Pan \email{yuep027@gmail.com}
