@@ -30,8 +30,7 @@ diff_gene_list.scppp <- function(data, final_clust_res = NULL,
   stopifnot('Clust2 not match the cluster label from HclustDepart' = clust2 %in% final_clust_res$cluster)
   test_dat2 <- data[["representation"]]$departure
   data$de_results[["Hclust"]] <- diff_gene_list.matrix(test_dat2, final_clust_res,
-                                                          clust1, clust2,
-                                                          t)
+                                                          clust1, clust2, t_test)
   return(data)
 }
 
@@ -64,7 +63,7 @@ diff_gene_list.matrix <- function(data, final_clust_res = NULL,
     tidyr::spread(key = .data$clust_test, value = .data$Mean)
   fc_df_wide$mean_diff <- fc_df_wide$A - fc_df_wide$B
 
-  if(!t){
+  if(!t_test){
     k <- dat_long3 %>%
       dplyr::group_by(.data$variable, .data$clust_test) %>%
       tidyr::nest() %>%
@@ -77,7 +76,7 @@ diff_gene_list.matrix <- function(data, final_clust_res = NULL,
       tidyr::unnest(cols = c(.data$A, .data$B, .data$test))
   }
 
-  if(t){
+  if(t_test){
     k <- dat_long3 %>%
       dplyr::group_by(.data$variable, .data$clust_test) %>%
       tidyr::nest() %>%
