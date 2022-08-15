@@ -360,7 +360,7 @@ qqplot_env_pois.scppp <- function(sample_data, lambda, envelope_size = 100,
 
     apply_glmpca <- function(rawdata, L = 10){
 
-      set.seed(1234)
+      #set.seed(1234)
       test_df <- rawdata
       test_df <- test_df[which(rowSums(test_df) > 0), ]
       ctl <- list(maxIter=500,eps=1e-4)
