@@ -13,13 +13,16 @@ vignette: >
 
 This package is developed to visualize the Poissoneity of scRNA-seq UMI data, and explore cell clustering based on model departure as a novel data representation. 
 
-In the following sections, we introduce the approach for assessment of the validity of the independent Poisson statistical framework using Q-Q envelope plots. The code here is specific for validation of independent Poisson distributions of scRNA-seq data matrix entries, but such idea can be applied to different types of data under different assumptions of distributions.
+In the following sections, we introduce the approach for assessment of the validity of the Independent Poisson Distribution (IPD) statistical framework using Q-Q envelope plots. The code here is specific for validation of IPD of scRNA-seq data matrix entries, but such idea can be applied to different types of data under different assumptions of distributions.
 
-Then we propose using model departure as a novel data representation, which is a measurement of relative location of that UMI count with respect to the independent Poisson distribution at the individual entry level. A departure-based cell clustering algorithm is developed to explore cell subpopulations.
+Then we propose using Departure from the IPD (DIPD) as a novel data representation, which is a measurement of relative location of that UMI count with respect to the IPD at the individual entry level. A DIPD-based cell clustering algorithm is developed to explore cell subpopulations.
+
+For more comprehensive information, please refer to our preprint manuscript at https://pubmed.ncbi.nlm.nih.gov/36798423/.
 
 # Installing
 
 ```{r setup}
+# install.packages("scpoisson")
 library(scpoisson)
 library(dplyr)
 library(ggplot2)
@@ -27,13 +30,13 @@ library(ggplot2)
 
 # Poissoneity of scRNA-seq data
 
-ScRNA-seq data contains a large number of zeros, which makes the simple multiplication ineffective because zeros are not appropriately scaled by multiplication, motivating new statistical approaches. Here, we propose a different, more principled approach. Instead of focusing on gene averages and working with normalized and scaled counts data, we prioritize the individual UMI matrix entries. This approach is based on an independent Poisson statistical framework, where each RNA measurements for each cell comes from its own Poisson distribution. 
+ScRNA-seq data contains a large number of zeros, which makes the simple multiplication ineffective because zeros are not appropriately scaled by multiplication, motivating new statistical approaches. Here, we propose a different, more principled approach. Instead of focusing on gene averages and working with normalized and scaled counts data, we prioritize the individual UMI matrix entries. This approach is based on an IPD statistical framework, where each RNA measurements for each cell comes from its own Poisson distribution. 
 
-In the following example, we show how to visualize the Poissoneity of scRNA-seq UMI data by Q-Q envelope plots. The envelopes are generated from theoretical distribution, which provide a quantitative way measuring deviation from the diagonal line. If the theoretical distribution fits the data well, the curve should be located around the diagonal line and within the envelope. 
+To visualize the Poisson nature of scRNA-seq UMI data, we introduce Q-Q envelope plots. These plots compare the empirical distribution of the data with the theoretical Poisson distribution. The envelopes, derived from the theoretical distribution, provide a quantitative measure of the deviation from the diagonal line. Ideally, if the theoretical distribution fits the data well, the curve should closely align with the diagonal line and remain within the envelope.
 
-The GLM-PCA algorithm is applied for parameter estimation. Then some matrix entries (default 200, with estimated Poisson parameters closest to the given Poisson parameter) will be selected as sample data and compare with the theoretical Poisson distribution. The sample data we provided in this package contains 75 cells from one clonal cell line. Here we take $L=10$ since that is shown to be an appropriate number of latent vectors for this relatively homogeneous data set. In practice, we suggest try a range of $L$ and find the one which gives best fit. This number can be different for different data sets. As long as there exists such an $L$, which gives reasonable fit under the Poisson statistical framework, that demonstrates the "Poissoneity" of such data set.
+We employ the GLM-PCA algorithm for parameter estimation. Specifically, we select a subset of matrix entries (defaulting to 200) with estimated Poisson parameters closest to a given value. These entries are then compared to the theoretical Poisson distribution. In the provided package, the sample data comprises 71 cells from a clonal cell line. We set the numer of latent vectors ($L$) to 10, which has been found to be suitable for this relatively homogeneous dataset. However, in practice, we recommend trying different values of $L$ to identify the one that yields the best fit. This optimal value may vary across different datasets. The existence of an $L$ that provides a reasonable fit within the Poisson statistical framework demonstrates the "Poissoneity" of the dataset.
 
-The similar idea can be used to visualize different types of data under different assumptions of distributions.
+This visualization approach can be adapted to different types of data by considering different assumptions about their underlying distributions.
 
 ```{r poissoneity, message = F}
 # UMI count matrix
@@ -47,22 +50,66 @@ qqplot_env_pois(scppp_obj, L = 10, lambda = 5)
 
 As shown the the above figure, the aggregated 200 matrix entries were well fitted by Poisson distribution with parameter 5, i.e. these entries can be regarded as independent random samples generated from Poisson distribution with mean 5.
 
-# Cell clustering based on model departure
+# Cell clustering based on DIPD
 
-A major application of this concept "Poissoneity" is clustering using a model departure as data representation. 
+A major application of this concept "Poissoneity" is clustering using DIPD as a novel data representation. 
 
-The initial step is based on a crude two-way parameter approximation, where variation across cells is modeled by cell level parameters, and variation across genes is modeled by gene level parameters. This initial step in itself does not appropriately account for cell heterogeneity (different cell types). In the next step such interesting structure is captured by departures from the naive two-way approximation and the original count matrix is replaced by a Poisson departure matrix. In the departure matrix, each entry is quantified by the relative location of that original count with respect to the tentative Poisson distribution, whose parameter comes from the initial two-way approximation. The departure measure is captured by a Cumulative Distribution Function (CDF), which leaves the unexpectedly small counts nearly 0 and unusually large counts close to 1. Next, the departure measure is put on a more statistically amenable scale using the logit function. As a result, unexpectedly large counts give large positive values and unexpectedly small counts give large negative values. This departure matrix forms the input for cell clustering as a downstream analysis.
+The initial step is based on a crude two-way parameter approximation, where variation across cells is modeled by cell level parameters, and variation across genes is modeled by gene level parameters. This initial step in itself does not appropriately account for cell heterogeneity (different cell types). In the next step such interesting structure is captured by departures from the naive two-way approximation and the original count matrix is replaced by a Poisson departure matrix. In the departure matrix, each entry is quantified by the relative location of that original count with respect to the tentative Poisson distribution, whose parameter comes from the initial two-way approximation. The departure measure is captured by a Cumulative Distribution Function (CDF), which leaves the unexpectedly small counts nearly 0 and unusually large counts close to 1. Next, the departure measure is put on a more statistically amenable scale using the logit function. As a result, unexpectedly large counts give large positive values and unexpectedly small counts give large negative values. This departure matrix (i.e. DIPD representation) forms the input for cell clustering as a downstream analysis.
 
-The following example shows how to run our clustering pipeline using a model departure as data representation. In this simple case, set number of simulations $sim = 100$ is enough to separate the two known cell lines (71 cells from BCBL cell line and 58 from JSC cell line). For more complicated data sets, we suggest set the number of simulations to 500 or 1000 for more reliable clustering results.
+As an illustrative example, we randomly selected 2000 genes for the following analyses, which is sufficient for this simplified scenario. In practice, we recommend using all genes, which would yield more accurate and robust results.
 
-The clustering results are stored in object scppp under "clust_results". You can refer to "Hclust" under that for more details.
+The heatmap visualization presented below is based on the DIPD. This visualization is particularly useful when there is a need for a novel data representation using DIPD. It is worth noting that the `adj_CDF_logit` step does not need to be performed separately, as it is already included in the clustering function. Please note that clustering has not been performed in this step, and the cells (columns) are arranged based on known cell lines.
+
+```{r DIPD}
+# UMI count matrix
+test_dat <- as.matrix(get_example_data("p56"))
+# subset by taking random genes
+set.seed(1234)
+test_dat_sub <- as.matrix(test_dat[, sample(1:ncol(test_dat), 2000)])
+scppp_obj <- scppp(test_dat_sub, "rows")
+scppp_obj <- adj_CDF_logit(scppp_obj) 
+drep <- scppp_obj$representation$departure
+# cell line labels
+cell_labels <- as.factor(sub("_.*", "", colnames(drep)))
+levels(cell_labels) <- c("BCBL", "JSC")
+# Convert cluster labels to colors
+color_palette <- c("BCBL" = "blue", "JSC" = "red")
+cluster_colors <- color_palette[cell_labels]
+# Determine the order of columns based on cluster labels
+cell_order <- order(cell_labels)
+# Reorder the data and cluster colors based on column order
+data_reordered <- drep[, cell_order]
+cluster_colors_reordered <- cluster_colors[cell_order]
+
+# Define the desired color range
+color_range <- c(-4, 4)
+data_reordered[data_reordered < color_range[1]] <- color_range[1]
+data_reordered[data_reordered > color_range[2]] <- color_range[2]
+
+heatmap(data_reordered, col = colorRampPalette(c("blue", "white", "red"))(100),
+        hclustfun = function(x) hclust(x,method = 'ward.D2'),
+        Colv = NA,      # Remove column dendrogram
+        scale = "none", # Do not scale the data
+        ColSideColors = cluster_colors_reordered,
+        labRow = NA,    # Remove row names
+        labCol = NA,    # Remove column names
+        margins = c(5, 10))  # Adjust top and right margins
+
+# Add legend
+legend("topright", 
+       legend = unique(cell_labels),
+       fill = unique(cluster_colors),
+       title = "Cell line",
+       cex = 0.8)
+```
+
+The code snippet provided demonstrates the execution of our clustering pipeline using DIPD as the data representation. In this particular example, set `sim=100` proves sufficient to differentiate between two known cell lines: BCBL (71 cells) and JSC (58 cells). For more complex datasets, we recommend increasing the number of simulations to 500 or 1000 to obtain more reliable clustering outcomes.
+
+The clustering results are stored in the "clust_results" attribute of the "scppp" object. Further details can be found in the "Hclust" section within the object.
 
 ```{r clustering, warning=FALSE}
-# UMI count matrix
-test_dat <- as.data.frame(get_example_data("p56"))
-scppp_obj <- scppp(test_dat, "rows")
-
-scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3)
+# scppp_obj <- scppp(test_dat, "rows")
+scppp_obj <- HclustDepart(scppp_obj, maxSplit = 3, sim = 100)
 
 # cluster label for each cell
 clust_res <- scppp_obj[["clust_results"]]$Hclust[[1]]
@@ -71,9 +118,9 @@ table(clust_res[,2])
 
 ```
 
-The model departure data representation can also be fitted into any other clustering pipeline. Another option contained in this package is: keep departure as data representation but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. In general, this is a faster clustering algorithm to do clustering. However, it requires carefully tuning about resolution parameter, which can lead to different clustering results for the same data set. In this simple case, keeping the default resolution parameter (0.8) gives the correct clustering results as known cell lines.
+The DIPD can also be fitted into any other clustering pipeline. Another option available in the current version is: keep DIPD but apply the Louvain algorithm (implemented in Seurat pipeline) for clustering. In general, this is a faster clustering algorithm to do clustering. However, it requires carefully tuning about resolution parameter, as different values can lead to varying clustering results for the same dataset. In this simple case, keeping the default resolution parameter (0.8) gives the correct clustering results as known cell lines.
 
-The clustering results are also stored in object scppp under "clust_results". You can refer to "Lclust" under that for more details. 
+The clustering results are conveniently stored in the "clust_results" section of the scppp object. More detailed information about the clustering can be found under the "Lclust" attribute.
 
 ```{r example3, message=FALSE, warning=FALSE}
 scppp_obj <- LouvainDepart(scppp_obj)
@@ -82,6 +129,16 @@ scppp_obj <- LouvainDepart(scppp_obj)
 clust_res2 <- scppp_obj[["clust_results"]]$Lclust[[4]]
 head(clust_res2)
 table(clust_res2[,2])
+```
+
+# Differential Expression
+
+To identify differentially expressed genes between two clusters, the first step is to run the `adj_CDF_logit` function to calculate the DIPD representation. It is important that the cluster labels used for this comparison match the output obtained from the Hclust-Depart clustering. The resulting genes will be ranked in descending order of the mean difference between the two clusters.
+
+```{r example4, message=FALSE, warning=FALSE}
+scppp_obj <- adj_CDF_logit(scppp_obj) 
+scppp_obj <- diff_gene_list(scppp_obj, clust1 = "1", clust2 = "2", t = F)
+head(scppp_obj[["de_results"]]$Hclust)
 ```
 
 

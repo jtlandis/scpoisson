@@ -53,3 +53,5 @@ Thumbs.db
 .Rhistory
 
 data/generate_data.R
+/doc/
+/Meta/
